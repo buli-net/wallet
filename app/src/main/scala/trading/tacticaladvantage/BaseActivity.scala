@@ -80,7 +80,6 @@ trait BaseActivity extends AppCompatActivity { me =>
   }
 
   def goToWithValue(target: Class[_], value: Any): Any = {
-    // Utility method in case if target expects a value
     InputParser.value = value
     goTo(target)
   }
@@ -98,8 +97,6 @@ trait BaseActivity extends AppCompatActivity { me =>
     timer.cancel
   }
 
-  // Helpers
-
   def browse(maybeUri: String): Unit = try {
     me startActivity new Intent(Intent.ACTION_VIEW, Uri parse maybeUri)
   } catch { case exception: Throwable => me onFail exception }
@@ -108,8 +105,6 @@ trait BaseActivity extends AppCompatActivity { me =>
     val shareAction = (new Intent).setAction(Intent.ACTION_SEND)
     shareAction.setType("text/plain").putExtra(Intent.EXTRA_TEXT, text)
   }
-
-  // Listener helpers
 
   def onDismiss(fun: => Unit): DialogInterface.OnDismissListener =
     new DialogInterface.OnDismissListener { def onDismiss(alert: DialogInterface): Unit = fun }
@@ -137,15 +132,13 @@ trait BaseActivity extends AppCompatActivity { me =>
   }
 
   def setVisMany(items: (Boolean, View)*): Unit = {
-    for (isVisible \ view <- items) setVis(isVisible, view)
+    for (isVisible <- items) setVis(isVisible._1, isVisible._2)
   }
 
   def UITask(fun: => Any): java.util.TimerTask = {
     val runnableExec = new Runnable { override def run: Unit = fun }
     new java.util.TimerTask { def run: Unit = me runOnUiThread runnableExec }
   }
-
-  // Builders
 
   def clickableTextField(view: View): TextView = {
     val field: TextView = view.asInstanceOf[TextView]
@@ -168,61 +161,37 @@ trait BaseActivity extends AppCompatActivity { me =>
   }
 
   def getPositiveButton(alert: AlertDialog): Button = alert.getButton(DialogInterface.BUTTON_POSITIVE)
-
   def getNegativeButton(alert: AlertDialog): Button = alert.getButton(DialogInterface.BUTTON_NEGATIVE)
-
   def getNeutralButton(alert: AlertDialog): Button = alert.getButton(DialogInterface.BUTTON_NEUTRAL)
 
   def mkCheckForm(ok: AlertDialog => Unit, no: => Unit, bld: AlertDialog.Builder, okRes: Int, noRes: Int): AlertDialog = {
-    // Create alert dialog where NEGATIVE button removes a dialog AND calls a respected provided function
-    // both POSITIVE and NEGATIVE buttons may be omitted by providing -1 as their resource ids
     if (-1 != noRes) bld.setNegativeButton(noRes, null)
     if (-1 != okRes) bld.setPositiveButton(okRes, null)
     val alert = showForm(bld.create)
-
-    val posAct = onButtonTap {
-      ok(alert)
-    }
-
-    val negAct = onButtonTap {
-      alert.dismiss
-      no
-    }
-
+    val posAct = onButtonTap { ok(alert) }
+    val negAct = onButtonTap { alert.dismiss; no }
     if (-1 != noRes) getNegativeButton(alert) setOnClickListener negAct
     if (-1 != okRes) getPositiveButton(alert) setOnClickListener posAct
     alert
   }
 
   def mkCheckFormNeutral(ok: AlertDialog => Unit, no: => Unit, neutral: AlertDialog => Unit, bld: AlertDialog.Builder, okRes: Int, noRes: Int, neutralRes: Int): AlertDialog = {
-
     if (-1 != neutralRes) bld.setNeutralButton(neutralRes, null)
     val alert = mkCheckForm(ok, no, bld, okRes, noRes)
-
-    val neutralAct = onButtonTap {
-      neutral(alert)
-    }
-
-    // Extend base dialog with a special NEUTRAL button, may be omitted by providing -1
+    val neutralAct = onButtonTap { neutral(alert) }
     if (-1 != neutralRes) getNeutralButton(alert) setOnClickListener neutralAct
     alert
   }
 
   def showForm(alertDialog: AlertDialog): AlertDialog = {
-    // Display dialog taking into account that host activity may not be there
-    // Popup window is not cancellable on touch outside and may be width-limited
-
     try {
       alertDialog.show
-      // First, limit popup window width in case if this is a tablet, then make sure it does not blow up if called on destroyed activity
       if (WalletApp.app.scrWidth > 2.3) alertDialog.getWindow.setLayout(WalletApp.app.maxDialog.toInt, ViewGroup.LayoutParams.WRAP_CONTENT)
       clickableTextField(alertDialog findViewById android.R.id.message)
       alertDialog.setCanceledOnTouchOutside(false)
-    } catch none
+    } catch { case _: Throwable => }
     alertDialog
   }
-
-  // Scanner
 
   final val scannerRequestCode = 101
 
@@ -240,7 +209,6 @@ trait BaseActivity extends AppCompatActivity { me =>
     text setOnClickListener onButtonTap(onTap)
     text setBackgroundResource backgroundRes
     text setText chipText.html
-
     flow setVisibility View.VISIBLE
     flow addView text
     text
@@ -260,27 +228,14 @@ trait BaseActivity extends AppCompatActivity { me =>
     (titleBodyAsViewBuilder(title, container), extraInputLayout, extraInput)
   }
 
-  // Rich popup title
-
   implicit class TitleView(titleText: String) {
     val view: LinearLayout = getLayoutInflater.inflate(R.layout.frag_top_tip, null).asInstanceOf[LinearLayout]
     val flow: FlowLayout = view.findViewById(R.id.tipExtraTags).asInstanceOf[FlowLayout]
     val tipTitle: TextView = clickableTextField(view findViewById R.id.tipTitle)
     tipTitle.setText(titleText.html)
-
-    def asDefView: LinearLayout = {
-      view.setBackgroundColor(0x22AAAAAA)
-      view
-    }
-
-    def asColoredView(colorRes: Int): LinearLayout = {
-      val resultColor = ContextCompat.getColor(me, colorRes)
-      view.setBackgroundColor(resultColor)
-      view
-    }
+    def asDefView: LinearLayout = { view.setBackgroundColor(0x22AAAAAA); view }
+    def asColoredView(colorRes: Int): LinearLayout = { view.setBackgroundColor(ContextCompat.getColor(me, colorRes)); view }
   }
-
-  // Fiat / BTC converter
 
   def updateViewEnabled(view: View, isEnabled: Boolean) = UITask {
     view setAlpha { if (isEnabled) 1F else 0.3F }
@@ -303,41 +258,13 @@ trait BaseActivity extends AppCompatActivity { me =>
   class RateManager(val rmc: RateManagerContent, group: NetworkWalletGroup, fiatCode: String) {
     def bigDecimalFrom(input: CurrencyEditText): BigDecimal = BigDecimal(input.getNumericValueBigDecimal)
     def resultMsat: MilliSatoshi = (bigDecimalFrom(rmc.inputAmount) * CoinDenom.factor).toLong.msat
-
-    def updateText(value: MilliSatoshi): Unit = {
-      rmc.updateBtcText(CoinDenom.fromMsat(value).toString)
-      updateFiatInput
-    }
-
-    def updatedFiatFromBtc: String =
-      WalletApp.msatInFiat(group.fiatRates.info.rates, fiatCode)(resultMsat)
-        .filter(0.001D <= _).map(_.toString).getOrElse("0.00")
-
-    def updatedBtcFromFiat: String =
-      WalletApp.currentRate(group.fiatRates.info.rates, fiatCode)
-        .map(perBtc => bigDecimalFrom(rmc.fiatInputAmount) / perBtc)
-        .filter(0.000000001D <= _).map(Denomination.btcBigDecimal2MSat)
-        .map(CoinDenom.fromMsat).map(_.toString)
-        .getOrElse("0.00")
-
-    def updateFiatInput: Unit = {
-      rmc.fiatInputAmount setText updatedFiatFromBtc
-      rmc.fiatInputAmount setMaxNumberOfDecimalDigits 2
-    }
-
-    def updateBtcInput: Unit = {
-      rmc.inputAmount setText updatedBtcFromFiat
-      rmc.inputAmount setMaxNumberOfDecimalDigits 8
-    }
-
-    rmc.fiatInputAmount addTextChangedListener onTextChange { _ =>
-      if (rmc.fiatInputAmount.hasFocus) updateBtcInput
-    }
-
-    rmc.inputAmount addTextChangedListener onTextChange { _ =>
-      if (rmc.inputAmount.hasFocus) updateFiatInput
-    }
-
+    def updateText(value: MilliSatoshi): Unit = { rmc.updateBtcText(CoinDenom.fromMsat(value).toString); updateFiatInput }
+    def updatedFiatFromBtc: String = WalletApp.msatInFiat(group.fiatRates.info.rates, fiatCode)(resultMsat).filter(0.001D <= _).map(_.toString).getOrElse("0.00")
+    def updatedBtcFromFiat: String = WalletApp.currentRate(group.fiatRates.info.rates, fiatCode).map(perBtc => bigDecimalFrom(rmc.fiatInputAmount) / perBtc).filter(0.000000001D <= _).map(Denomination.btcBigDecimal2MSat).map(CoinDenom.fromMsat).map(_.toString).getOrElse("0.00")
+    def updateFiatInput: Unit = { rmc.fiatInputAmount setText updatedFiatFromBtc; rmc.fiatInputAmount setMaxNumberOfDecimalDigits 2 }
+    def updateBtcInput: Unit = { rmc.inputAmount setText updatedBtcFromFiat; rmc.inputAmount setMaxNumberOfDecimalDigits 8 }
+    rmc.fiatInputAmount addTextChangedListener onTextChange { _ => if (rmc.fiatInputAmount.hasFocus) updateBtcInput }
+    rmc.inputAmount addTextChangedListener onTextChange { _ => if (rmc.inputAmount.hasFocus) updateFiatInput }
     rmc.inputAmountHint setText group.ticker
     rmc.fiatInputAmountHint setText fiatCode.toUpperCase
     rmc.fiatInputAmount setLocale Denomination.locale
@@ -348,7 +275,6 @@ trait BaseActivity extends AppCompatActivity { me =>
     val feeRate = container.findViewById(R.id.feeRate).asInstanceOf[TextView]
     val bitcoinFee = container.findViewById(R.id.bitcoinFee).asInstanceOf[TextView]
     val fiatFee = container.findViewById(R.id.fiatFee).asInstanceOf[TextView]
-
     val customFeerate = container.findViewById(R.id.customFeerate).asInstanceOf[Slider]
     val customFeerateOption = container.findViewById(R.id.customFeerateOption).asInstanceOf[TextView]
   }
@@ -356,18 +282,12 @@ trait BaseActivity extends AppCompatActivity { me =>
   class FeeView[T](fr: FiatRates, from: FeeratePerByte, val fvc: FeeViewContent) {
     var worker: ThrottledWork[String, T] = _
     var rate: FeeratePerKw = _
-
     def update(feeOpt: Option[MilliSatoshi], showIssue: Boolean): Unit = {
       val satPerVirtualByteFee = getString(dialog_fee).format(FeeratePerByte(rate).feerate.toLong)
       setVisMany(feeOpt.isDefined -> fvc.bitcoinFee, feeOpt.isDefined -> fvc.fiatFee)
       fvc.feeRate.setText(s"$satPerVirtualByteFee sat/vB".html)
-
-      feeOpt.foreach { fee =>
-        fvc.fiatFee setText WalletApp.currentMsatInFiatHuman(fr, fee).html
-        fvc.bitcoinFee setText CoinDenom.parsed(fee, cardIn, cardZero).html
-      }
+      feeOpt.foreach { fee => fvc.fiatFee setText WalletApp.currentMsatInFiatHuman(fr, fee).html; fvc.bitcoinFee setText CoinDenom.parsed(fee, cardIn, cardZero).html }
     }
-
     private val revealSlider = onButtonTap {
       val currentFeerate = FeeratePerByte(rate).feerate.toLong
       setVisMany(false -> fvc.customFeerateOption, true -> fvc.customFeerate)
@@ -375,11 +295,9 @@ trait BaseActivity extends AppCompatActivity { me =>
       fvc.customFeerate.setValueTo(currentFeerate * 10)
       fvc.customFeerate.setValue(currentFeerate)
     }
-
     setVis(isVisible = true, fvc.customFeerateOption)
     fvc.customFeerateOption.setOnClickListener(revealSlider)
     fvc.feeRate.setOnClickListener(revealSlider)
-
     fvc.customFeerate addOnChangeListener new Slider.OnChangeListener {
       override def onValueChange(slider: Slider, value: Float, fromUser: Boolean): Unit = {
         val feeratePerByte = FeeratePerByte(value.toLong.sat)
@@ -389,71 +307,33 @@ trait BaseActivity extends AppCompatActivity { me =>
     }
   }
 
-  // Chan TX popup for wallets
-
-  sealed trait HasHostView {
-    val host: View
-  }
-
-  class EditView(val host: View) extends HasHostView {
-    val rmc = new RateManagerContent(host)
-    val fvc = new FeeViewContent(host)
-  }
-
-  class CPFPView(val host: View) extends HasHostView {
-    val cpfpCurrent = new TwoSidedItem(host.findViewById(R.id.cpfpCurrent), getString(tx_cpfp_current), new String)
-    val cpfpAfter = new TwoSidedItem(host.findViewById(R.id.cpfpAfter), getString(tx_cpfp_rbf_after), new String)
-    val fvc = new FeeViewContent(host)
-  }
-
-  class RBFView(val host: View) extends HasHostView {
-    val rbfCurrent = new TwoSidedItem(host.findViewById(R.id.rbfCurrent), getString(tx_rbf_current), new String)
-    val rbfIssue = host.findViewById(R.id.rbfIssue).asInstanceOf[TextView]
-    val fvc = new FeeViewContent(host)
-  }
-
-  class ConfirmView(val host: View) extends HasHostView {
-    val chainNextButton = host.findViewById(R.id.chainNextButton).asInstanceOf[NoboButton]
-    val chainEditButton = host.findViewById(R.id.chainEditButton).asInstanceOf[NoboButton]
-    val chainCancelButton = host.findViewById(R.id.chainCancelButton).asInstanceOf[NoboButton]
-    val confirmFiat = new TwoSidedItem(host.findViewById(R.id.confirmFiat), getString(dialog_send_confirm_fiat), new String)
-    val confirmAmount = new TwoSidedItem(host.findViewById(R.id.confirmAmount), getString(dialog_send_confirm_amount), new String)
-    val confirmFee = new TwoSidedItem(host.findViewById(R.id.confirmFee), getString(dialog_send_confirm_fee), new String)
-  }
+  sealed trait HasHostView { val host: View }
+  class EditView(val host: View) extends HasHostView { val rmc = new RateManagerContent(host); val fvc = new FeeViewContent(host) }
+  class CPFPView(val host: View) extends HasHostView { val cpfpCurrent = new TwoSidedItem(host.findViewById(R.id.cpfpCurrent), getString(tx_cpfp_current), new String); val cpfpAfter = new TwoSidedItem(host.findViewById(R.id.cpfpAfter), getString(tx_cpfp_rbf_after), new String); val fvc = new FeeViewContent(host) }
+  class RBFView(val host: View) extends HasHostView { val rbfCurrent = new TwoSidedItem(host.findViewById(R.id.rbfCurrent), getString(tx_rbf_current), new String); val rbfIssue = host.findViewById(R.id.rbfIssue).asInstanceOf[TextView]; val fvc = new FeeViewContent(host) }
+  class ConfirmView(val host: View) extends HasHostView { val chainNextButton = host.findViewById(R.id.chainNextButton).asInstanceOf[NoboButton]; val chainEditButton = host.findViewById(R.id.chainEditButton).asInstanceOf[NoboButton]; val chainCancelButton = host.findViewById(R.id.chainCancelButton).asInstanceOf[NoboButton]; val confirmFiat = new TwoSidedItem(host.findViewById(R.id.confirmFiat), getString(dialog_send_confirm_fiat), new String); val confirmAmount = new TwoSidedItem(host.findViewById(R.id.confirmAmount), getString(dialog_send_confirm_amount), new String); val confirmFee = new TwoSidedItem(host.findViewById(R.id.confirmFee), getString(dialog_send_confirm_fee), new String) }
 
   sealed trait SendView {
     val body = getLayoutInflater.inflate(R.layout.frag_input_chain, null)
     val editChain = body.findViewById(R.id.editChain).asInstanceOf[LinearLayout]
     val inputChain = body.findViewById(R.id.inputChain).asInstanceOf[LinearLayout]
-
     val editView = new EditView(editChain)
     val rbfView = new RBFView(body findViewById R.id.rbf)
     val cpfpView = new CPFPView(body findViewById R.id.cpfp)
     val confirmView = new ConfirmView(body findViewById R.id.confirmChain)
     val views = List(editView, rbfView, cpfpView, confirmView)
     var defaultView: HasHostView = editView
-
     def switchTo(visibleSection: HasHostView): Unit = for (candidateSection <- views) setVis(isVisible = candidateSection == visibleSection, candidateSection.host)
     def setButtonsVisible(alert: AlertDialog, on: Boolean): Unit = setVisMany(on -> getPositiveButton(alert), on -> getNegativeButton(alert), on -> getNeutralButton(alert), true -> body)
-
-    def switchToDefault(alert: AlertDialog): Unit = {
-      setInputEnabled(alert, isEnabled = true).run
-      setButtonsVisible(alert, on = true)
-      switchTo(defaultView)
-    }
-
-    def setInputEnabled(alert: AlertDialog, isEnabled: Boolean) = UITask {
-      editView.rmc.fiatInputAmount.setEnabled(isEnabled)
-      editView.rmc.inputAmount.setEnabled(isEnabled)
-      updatePosButton(alert, isEnabled).run
-    }
+    def switchToDefault(alert: AlertDialog): Unit = { setInputEnabled(alert, isEnabled = true).run; setButtonsVisible(alert, on = true); switchTo(defaultView) }
+    def setInputEnabled(alert: AlertDialog, isEnabled: Boolean) = UITask { editView.rmc.fiatInputAmount.setEnabled(isEnabled); editView.rmc.inputAmount.setEnabled(isEnabled); updatePosButton(alert, isEnabled).run }
   }
 
   class BtcSendView(group: NetworkWalletGroup, specs: Seq[WalletSpec], hardMax: MilliSatoshi) extends SendView {
+    val rm = new RateManager(editView.rmc, group, WalletApp.fiatCode)
     val totalCanSend = specs.map(_.info.lastBalance).sum.toMilliSatoshi.min(hardMax)
     val canSendFiat = WalletApp.currentMsatInFiatHuman(group.fiatRates, totalCanSend)
     val canSend = CoinDenom.parsedTT(totalCanSend, cardIn, cardZero)
-
     editView.rmc.hintFiatDenom setText getString(dialog_up_to).format(canSendFiat).html
     editView.rmc.hintDenom setText getString(dialog_up_to).format(canSend).html
   }
@@ -468,13 +348,10 @@ class TwoSidedItem(val parent: View, firstText: CharSequence, secondText: CharSe
 
 trait BaseCheckActivity extends BaseActivity { me =>
   def PROCEED(state: Bundle): Unit
-
   override def START(state: Bundle): Unit = {
     if (WalletApp.isAlive && WalletApp.isOperational) PROCEED(state) else {
-      // The way Android works is we can get some objects nullified when restoring from background
-      // when that happens we make sure to free all remaining resources and start from scratch
-      try WalletApp.btc.freePossiblyUsedRuntimeResouces catch none
-      try WalletApp.secret = null catch none
+      try WalletApp.btc.freePossiblyUsedRuntimeResouces catch { case _: Throwable => }
+      try WalletApp.secret = null catch { case _: Throwable => }
       me exitTo classOf[MainActivity]
     }
   }
@@ -487,14 +364,12 @@ trait QRActivity extends BaseCheckActivity { me =>
     val out = new FileOutputStream(s"$paymentRequestFilePath/qr.png")
     bitmap.compress(Bitmap.CompressFormat.PNG, 85, out)
     out.close
-
     val savedFile = new File(paymentRequestFilePath, "qr.png")
     val fileURI = FileProvider.getUriForFile(me, "trading.tacticaladvantage", savedFile)
     val share = new Intent setAction Intent.ACTION_SEND setType "text/plain" addFlags Intent.FLAG_GRANT_READ_URI_PERMISSION
     share.putExtra(Intent.EXTRA_TEXT, text).putExtra(Intent.EXTRA_STREAM, fileURI).setDataAndType(fileURI, getContentResolver getType fileURI)
     me startActivity Intent.createChooser(share, "Choose an app")
   }
-
   class QRViewHolder(itemView: View) extends RecyclerView.ViewHolder(itemView) {
     val qrCode: ImageView = itemView.findViewById(R.id.qrCode).asInstanceOf[ImageView]
     val qrLabel: TextView = itemView.findViewById(R.id.qrLabel).asInstanceOf[TextView]
@@ -509,19 +384,11 @@ object QRActivity {
   val hints = new java.util.Hashtable[EncodeHintType, Any]
   hints.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.M)
   hints.put(EncodeHintType.MARGIN, 1)
-
   def get(data: String, size: Int): Bitmap = {
     val bitMatrix = writer.encode(data, BarcodeFormat.QR_CODE, size, size, hints)
     val (width, height) = (bitMatrix.getWidth, bitMatrix.getHeight)
     val pixels = new Array[Int](width * height)
-
-    for {
-      xPos <- 0 until width
-      yPos <- 0 until height
-      isBlack = bitMatrix.get(xPos, yPos)
-      color = if (isBlack) Color.BLACK else Color.WHITE
-    } pixels(yPos * width + xPos) = color
-
+    for (xPos <- 0 until width; yPos <- 0 until height) { pixels(yPos * width + xPos) = if (bitMatrix.get(xPos, yPos)) Color.BLACK else Color.WHITE }
     val qrBitmap = Bitmap.createBitmap(width, height, ARGB_8888)
     qrBitmap.setPixels(pixels, 0, size, 0, 0, width, height)
     qrBitmap
