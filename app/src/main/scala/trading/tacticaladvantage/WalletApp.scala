@@ -1,3 +1,4 @@
+
 package trading.tacticaladvantage
 
 import akka.actor.{PoisonPill, Props}
@@ -49,7 +50,6 @@ class NetworkWalletGroup(val netId: Int, val ticker: String, val prefix: String,
     try fiatRates.becomeShutDown catch none
     try feeRates.becomeShutDown catch none
     try electrum.becomeShutDown catch none
-    // Non-alive and non-operational
     txDataBag = null
     fiatRates = null
     feeRates = null
@@ -57,13 +57,11 @@ class NetworkWalletGroup(val netId: Int, val ticker: String, val prefix: String,
 
   def makeAlive(app: WalletApp): Unit = {
     val interface = new DBInterfaceSQLiteAndroid(app, s"$netId.db")
-
     interface txWrap {
       walletBag = new SQLiteWallet(interface)
       extDataBag = new SQLiteData(interface)
       txDataBag = new SQLiteTx(interface)
     }
-
     val params = WalletParameters(extDataBag, walletBag, txDataBag)
     electrum = new Electrum(params, genesis.hash, ticker)
   }
@@ -87,7 +85,6 @@ class NetworkWalletGroup(val netId: Int, val ticker: String, val prefix: String,
           case None => addTx(event.received, event.sent - event.received, Satoshi(0L), CoinDescription(event.addresses, label = None, netId), isIncoming = 0L)
         }
       }
-
       override def onChainDisconnected: Unit = currentNode = Option.empty[InetSocketAddress]
       override def onChainMasterSelected(event: InetSocketAddress): Unit = currentNode = event.asSome
     }
@@ -104,7 +101,6 @@ class NetworkWalletGroup(val netId: Int, val ticker: String, val prefix: String,
     val core = SigningWallet(walletType = kind, attachedMaster = xPriv.asSome)
     val ewt = ElectrumWalletType.makeSigningType(core.walletType, xPriv, electrum.chainHash, 0L)
     if (electrum.specs contains ewt.xPub) return
-
     val spec = electrum.makeSigningWalletParts(core, ewt, lastBalance = Satoshi(0L), label = ticker)
     walletBag.addWallet(spec.info, electrum.params.emptyPersistentDataBytes, spec.data.keys.ewt.xPub.publicKey)
     postInitWallet(spec)
@@ -117,7 +113,6 @@ class NetworkWalletGroup(val netId: Int, val ticker: String, val prefix: String,
 
     connectionProvider doWhenReady {
       electrum.pool ! ElectrumClientPool.InitConnect
-
       val feeratePeriodHours = 2
       val rateRetry = Rx.retry(Rx.ioQueue.map(_ => feeRates reloadData connectionProvider), Rx.incSec, 3 to 18 by 3)
       val rateRepeat = Rx.repeat(rateRetry, Rx.incHour, feeratePeriodHours to Int.MaxValue by feeratePeriodHours)
@@ -160,75 +155,35 @@ class NetworkWalletGroup(val netId: Int, val ticker: String, val prefix: String,
 
 object WalletApp {
   final val ID_BTC = 1
-  final val ID_ECX = 2
   final val FIAT_CODE = "fiatCode"
-  final val SHOW_TA_CARD = "showTaCard"
 
   val btc = new NetworkWalletGroup(WalletApp.ID_BTC, ticker = "BTC", prefix = "bitcoin:",
     coinName = "Bitcoin", R.color.signCardBitcoin, R.drawable.border_btc_selected,
     R.drawable.qrbg_btc, zeroColor = "#FBB945", Block.LivenetGenesisBlock)
 
-  val ecx = new NetworkWalletGroup(WalletApp.ID_ECX, ticker = "ECX", prefix = "ecash:",
-    coinName = "eCash", R.color.signCardEcash, R.drawable.border_ecx_selected,
-    R.drawable.qrbg_ecx, zeroColor = "#FA625C", Block.TestnetGenesisBlock)
-
   val pendingInfos = mutable.Map.empty[String, ItemDetails]
   val seenInfos = mutable.Map.empty[String, ItemDetails]
 
-  var linkClient: LinkClient = _
   var secret: WalletSecret = _
   var app: WalletApp = _
 
   def fiatCode: String = app.prefs.getString(FIAT_CODE, "usd")
-  def getShowTaCard: Boolean = app.prefs.getBoolean(SHOW_TA_CARD, true)
-  def setShowTaCard(show: Boolean) = app.prefs.edit.putBoolean(SHOW_TA_CARD, show).commit
 
-  def isAlive: Boolean = null != app && null != btc && null != ecx && btc.isAlive && ecx.isAlive
-  def isOperational: Boolean = null != secret && null != linkClient && btc.isOperational && ecx.isOperational
+  def isAlive: Boolean = null != app && null != btc && btc.isAlive
+  def isOperational: Boolean = null != secret && btc.isOperational
 
   def makeOperational(sec: WalletSecret): Unit = {
-    linkClient = new LinkClient(btc.extDataBag)
     secret = sec
-
     btc.extDataBag.db txWrap {
       btc.feeRates = new BtcFeeRates(btc.extDataBag)
       btc.fiatRates = new BtcFiatRates(btc.extDataBag)
     }
-
-    ecx.extDataBag.db txWrap {
-      ecx.feeRates = new EcxFeeRates(ecx.extDataBag)
-      ecx.fiatRates = new EcxFiatRates(ecx.extDataBag)
-    }
-
     btc.makeOperational(app.getAssets.open("btc_servers.json"), app.getAssets.open("btc_checkpoints.json"), strict = true)
-    ecx.makeOperational(app.getAssets.open("ecx_servers.json"), app.getAssets.open("ecx_checkpoints.json"), strict = false)
-
-    linkClient ! new LinkClient.Listener(LinkClient.USER_UPDATE) {
-      override def onConnected(stateData: LinkClient.TaLinkState): Unit = stateData match {
-        case data: LinkClient.UserStatus => linkClient ! LinkClient.Request(LinkClient.GetUserStatus(data.sessionToken), id)
-        case _ => // Not logged in, user can do it manually later
-      }
-
-      override def onResponse(arguments: Option[LinkClient.ResponseArguments] = None): Unit = arguments.collectFirst {
-        case LinkClient.Failure(LinkClient.NOT_AUTHORIZED) => linkClient ! LinkClient.LoggedOut
-        case status: LinkClient.UserStatus => linkClient ! status
-      }
-    }
   }
 
   def initWallets = {
     btc.initWallets(secret.keys.bitcoinMaster)
-    ecx.initWallets(secret.keys.bitcoinMaster)
-    initTaCard
   }
-
-  def initTaCard = if (getShowTaCard) {
-    // This is a single place where we should bypass sequential threading
-    for (status <- linkClient.loadUserStatus) linkClient.data = status
-    linkClient ! WsListener.CmdConnect
-  }
-
-  // Fiat conversion
 
   def currentRate(rates: Fiat2Coin, code: String): Try[Double] = Try(rates apply code)
   def msatInFiat(rates: Fiat2Coin, code: String)(msat: MilliSatoshi): Try[Double] = currentRate(rates, code).map(per => msat.toLong * per / CoinDenom.factor)
@@ -247,7 +202,6 @@ object WalletApp {
   def when(thenDate: Date, f: SimpleDateFormat): String = {
     val deltaMs = thenDate.getTime - System.currentTimeMillis
     val dir = if (deltaMs >= 0) Direction.NEXT else Direction.LAST
-
     math.abs(deltaMs) match {
       case absMs if absMs < DateUtils.MINUTE_IN_MILLIS => "now"
       case absMs if absMs < DateUtils.HOUR_IN_MILLIS =>
@@ -266,7 +220,6 @@ object WalletApp {
 
 class WalletApp extends Application { me =>
   WalletApp.app = me
-
   private[this] lazy val metrics = getResources.getDisplayMetrics
   lazy val prefs: SharedPreferences = getSharedPreferences("prefs", Context.MODE_PRIVATE)
   lazy val scrWidth: Double = metrics.widthPixels.toDouble / metrics.densityDpi
@@ -294,8 +247,6 @@ class WalletApp extends Application { me =>
     clipboardManager.setPrimaryClip(bufferContent)
     quickToast(copied_to_clipboard)
   }
-
-  // Plurals
 
   lazy val plur = getString(lang) match {
     case "eng" | "esp" => (opts: Array[String], num: Int) => if (num == 1) opts(1) else opts(2)
