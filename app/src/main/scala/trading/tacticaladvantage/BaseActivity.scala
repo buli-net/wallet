@@ -452,7 +452,6 @@ trait BaseActivity extends AppCompatActivity { me =>
   class BtcSendView(group: NetworkWalletGroup, specs: Seq[WalletSpec], hardMax: MilliSatoshi) extends SendView {
     val totalCanSend = specs.map(_.info.lastBalance).sum.toMilliSatoshi.min(hardMax)
     val canSendFiat = WalletApp.currentMsatInFiatHuman(group.fiatRates, totalCanSend)
-    val rm = new RateManager(editView.rmc, group, WalletApp.fiatCode)
     val canSend = CoinDenom.parsedTT(totalCanSend, cardIn, cardZero)
 
     editView.rmc.hintFiatDenom setText getString(dialog_up_to).format(canSendFiat).html
@@ -475,7 +474,6 @@ trait BaseCheckActivity extends BaseActivity { me =>
       // The way Android works is we can get some objects nullified when restoring from background
       // when that happens we make sure to free all remaining resources and start from scratch
       try WalletApp.btc.freePossiblyUsedRuntimeResouces catch none
-      try WalletApp.ecx.freePossiblyUsedRuntimeResouces catch none
       try WalletApp.secret = null catch none
       me exitTo classOf[MainActivity]
     }
