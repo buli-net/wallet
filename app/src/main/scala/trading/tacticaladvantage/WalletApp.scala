@@ -4,6 +4,7 @@ import akka.actor.{PoisonPill, Props}
 import spray.json._
 import trading.tacticaladvantage.utils.ImplicitJsonFormats._
 import android.app.Application
+import spray.json.DefaultJsonProtocol._
 import android.content._
 import android.icu.text.RelativeDateTimeFormatter.{Direction, RelativeUnit, Style}
 import android.icu.text.{DisplayContext, NumberFormat, RelativeDateTimeFormatter}
