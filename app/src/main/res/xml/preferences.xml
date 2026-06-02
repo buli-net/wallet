@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <ListPreference
+        android:key="fiat_code"
+        android:title="Currency"
+        android:summary="Sellect Fiat"
+        android:entries="@array/fiat_names"
+        android:entryValues="@array/fiat_codes"
+        android:defaultValue="USD" />
+</PreferenceScreen>
