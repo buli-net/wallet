@@ -21,7 +21,7 @@ abstract class FiatRates(bag: SQLiteData, label: String) extends CanBeShutDown {
 
   val customFiatSymbols: Map[String, String] =
     Map("usd" -> "$", "inr" -> "₹", "gbp" -> "£", "cny" -> "CN¥",
-      "jpy" -> "¥", "brl" -> "R$", "eur" -> "€", "krw" -> "₩")
+      "jpy" -> "¥", "brl" -> "R$", "eur" -> "€", "krw" -> "₩", "vnd" -> "₫")
 
   var listeners: Set[FiatRatesListener] = Set {
     new FiatRatesListener {
@@ -42,7 +42,6 @@ class BtcFiatRates(bag: SQLiteData) extends FiatRates(bag, SQLiteData.LABEL_BTC_
     case 1 => to[FiatRates.BlockchainInfoItemMap](provider.get("https://blockchain.info/ticker").string).map { case (code, item) => code.toLowerCase -> item.last }
   }
 }
-
 
 trait FiatRatesListener {
   def onFiatRates(rates: FiatRatesInfo): Unit
