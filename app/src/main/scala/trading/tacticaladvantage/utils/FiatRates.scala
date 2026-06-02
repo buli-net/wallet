@@ -8,6 +8,10 @@ import trading.tacticaladvantage.{CanBeShutDown, ConnectionProvider, Tools}
 object FiatRates {
   type BlockchainInfoItemMap = Map[String, BlockchainInfoItem]
   type CoinGeckoItemMap = Map[String, CoinGeckoItem]
+
+  val customFiatSymbols: Map[String, String] =
+    Map("usd" -> "$", "inr" -> "â‚¹", "gbp" -> "Â£", "cny" -> "CNÂ¥",
+      "jpy" -> "Â¥", "brl" -> "R$", "eur" -> "â‚¬", "krw" -> "â‚©", "vnd" -> "â‚«")
 }
 
 abstract class FiatRates(bag: SQLiteData, label: String) extends CanBeShutDown {
@@ -18,10 +22,6 @@ abstract class FiatRates(bag: SQLiteData, label: String) extends CanBeShutDown {
     info = FiatRatesInfo(newRates, info.rates, System.currentTimeMillis)
     for (lst <- listeners) lst.onFiatRates(info)
   }
-
-  val customFiatSymbols: Map[String, String] =
-    Map("usd" -> "$", "inr" -> "₹", "gbp" -> "£", "cny" -> "CN¥",
-      "jpy" -> "¥", "brl" -> "R$", "eur" -> "€", "krw" -> "₩", "vnd" -> "₫")
 
   var listeners: Set[FiatRatesListener] = Set {
     new FiatRatesListener {
@@ -37,11 +37,10 @@ abstract class FiatRates(bag: SQLiteData, label: String) extends CanBeShutDown {
 }
 
 class BtcFiatRates(bag: SQLiteData) extends FiatRates(bag, SQLiteData.LABEL_BTC_FIAT_RATES) {
-  def reloadData(provider: ConnectionProvider) = fr.acinq.eclair.secureRandom nextInt 2 match {
-    case 0 => to[CoinGecko](provider.get("https://api.coingecko.com/api/v3/exchange_rates").string).rates.map { case (code, item) => code.toLowerCase -> item.value }
-    case 1 => to[FiatRates.BlockchainInfoItemMap](provider.get("https://blockchain.info/ticker").string).map { case (code, item) => code.toLowerCase -> item.last }
-  }
+  def reloadData(provider: ConnectionProvider) = 
+    to[CoinGecko](provider.get("https://api.coingecko.com/api/v3/exchange_rates").string).rates.map { case (code, item) => code.toLowerCase -> item.value }
 }
+
 
 trait FiatRatesListener {
   def onFiatRates(rates: FiatRatesInfo): Unit
@@ -53,8 +52,8 @@ case class CoinGecko(rates: FiatRates.CoinGeckoItemMap)
 
 case class FiatRatesInfo(rates: Tools.Fiat2Coin, oldRates: Tools.Fiat2Coin, stamp: Long) {
   def pctDifference(code: String): Option[String] = List(rates get code, oldRates get code) match {
-    case Some(fresh) :: Some(old) :: Nil if fresh > old + old / 200 => Some(s"▲ ${Denomination.formatFiatShort format pctChange(fresh, old).abs}%")
-    case Some(fresh) :: Some(old) :: Nil if fresh < old - old / 200 => Some(s"▼ ${Denomination.formatFiatShort format pctChange(fresh, old).abs}%")
+    case Some(fresh) :: Some(old) :: Nil if fresh > old + old / 200 => Some(s"â–² ${Denomination.formatFiatShort format pctChange(fresh, old).abs}%")
+    case Some(fresh) :: Some(old) :: Nil if fresh < old - old / 200 => Some(s"â–¼ ${Denomination.formatFiatShort format pctChange(fresh, old).abs}%")
     case _ => None
   }
 
