@@ -22,57 +22,11 @@
     <string name="action_recovery_phrase_hint">Type recovery words</string>
     <string name="swap_label"><![CDATA[%1$s &#x2192; %2$s swap]]></string>
 
-    <!-- Earn Account -->
-    <string name="ta_earn_label">Earn account</string>
-    <string name="ta_client_login">Tap to login</string>
-    <string name="ta_login_email">Enter your email</string>
-    <string name="ta_login_pass">Paste one-time code</string>
-
-    <string name="ta_login_title_email"><![CDATA[<b>Earn account</b> login<br>at tactical-advantage.trading<br><i>Step 1 of 2: provide your email</i>]]></string>
-    <string name="ta_login_title_pass"><![CDATA[<b>Earn account</b> login<br>at tactical-advantage.trading<br><i>Step 2 of 2: we mailed you a code</i>]]></string>
-
-    <string name="ta_balances">Balances</string>
-    <string name="ta_loans">Active loans</string>
-
-    <string name="ta_loan_duration">Duration</string>
-    <string name="ta_loan_annual_return">Annual return</string>
-    <string name="ta_btc_loan_label">Earn account BTC loan</string>
-
-    <string name="ta_withdraw_when">Next withdraw %1$s</string>
-    <string name="ta_pending_deposit">Processing a deposit</string>
-    <string name="ta_withdraw_title">Withdraw from Earn account</string>
-    <string name="ta_withdraw_options">Select available options</string>
-    <string name="ta_withdraw">Withdraw</string>
-    <string name="ta_support">Support</string>
-    <string name="ta_logout">Log out</string>
-    <string name="ta_loan">Loan</string>
-
-    <string name="ta_account_disabled"><![CDATA[
-        Your account is currently disabled, so deposits and withdrawals are unavailable.<br><br>
-        The most likely reason is that your account has not yet been approved as a qualified investor account, or it has been manually suspended.<br><br>
-        Please contact us at <b><a href="mailto:contact@tactical-advantage.trading">contact@tactical-advantage.trading</a></b> if you think this is a mistake
-        or would like to apply for qualified investor status.
-    ]]></string>
-
-    <string name="dev_info"><![CDATA[by <a href="https://tactical-advantage.trading"><b>Tactical Advantage Fork by hvl</b></a>]]></string>
-
-    <array name="ta_loans">
-        <item>no active loans</item>
-        <item>%1$s active loan</item>
-        <item>%1$s active loans</item>
-        <item>%1$s active loans</item>
-    </array>
-
-    <array name="ta_days_left">
-        <item>finalizing</item>
-        <item>%1$s day</item>
-        <item>%1$s days</item>
-        <item>%1$s days</item>
-    </array>
+    <!-- Branding - đã thay Tactical Advantage -->
+    <string name="dev_info"><![CDATA[Bitcoin only • Your keys, your coins]]></string>
 
     <!-- Settings -->
     <string name="settings_show">Show %1$s wallet</string>
-    <string name="settings_show_ta">Show Earn account</string>
 
     <string name="settings_attach_wallet">Attach wallet</string>
     <string name="settings_view_recovery_phrase">View recovery phrase</string>
@@ -120,7 +74,7 @@
     <string name="popup_fiat"><![CDATA[<b>fiat&#160;value</b>&#160;%1$s]]></string>
     <string name="popup_fee"><![CDATA[<b>fee</b>&#160;%1$s]]></string>
 
-    <!-- CPFP / RBF (Transaction Acceleration) -->
+    <!-- CPFP / RBF -->
     <string name="tx_cpfp_current">Current sum</string>
     <string name="tx_cpfp_rbf_after">After boost</string>
     <string name="cpfp_explain">Apply CPFP to this incoming transaction to increase its fee and get it confirmed faster</string>
