@@ -76,7 +76,7 @@ class NetworkWalletGroup(val netId: Int, val ticker: String, val prefix: String,
     electrum.catcher ! new WalletEventsListener {
       override def onTransactionReceived(event: TransactionReceived): Unit = {
         def addTx(received: Satoshi, sent: Satoshi, fee: Satoshi, description: CoinDescription, isIncoming: Long): Unit = txDataBag.db txWrap {
-          txDataBag.addTx(event.tx, event.depth, received, sent, fee, event.xPubs, description, isIncoming, fiatRates.info.rates.toJson.compactPrint, event.stamp)
+          txDataBag.addTx(event.tx, event.depth, received, sent, fee, event.xPubs, description, isIncoming, fiatRates.info.rates, event.stamp)
           txDataBag.addSearchableTransaction(description.queryText(event.tx.txid), event.tx.txid)
           WalletApp.pendingInfos.remove(event.tx.txid.toHex)
         }
