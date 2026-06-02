@@ -10,7 +10,7 @@ import scala.language.implicitConversions
 object Tools {
   type Bytes = Array[Byte]
   type StringList = List[String]
-  type Fiat2Coin = Map[String, Double]
+  case class Fiat2Coin(code: String, rate: Double)
   type ExtPubKeys = List[ExtendedPublicKey]
   final val SEPARATOR = " "
 
