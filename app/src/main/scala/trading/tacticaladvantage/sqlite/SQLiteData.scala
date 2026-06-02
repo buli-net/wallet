@@ -16,9 +16,7 @@ import scala.util.Try
 object SQLiteData {
   final val LABEL_SECRET = "label-secret"
   final val LABEL_BTC_FEE_RATES = "label-btc-fee-rates"
-  final val LABEL_ECX_FEE_RATES = "label-ecx-fee-rates"
   final val LABEL_BTC_FIAT_RATES = "label-btc-fiat-rates"
-  final val LABEL_ECX_FIAT_RATES = "label-ecx-fiat-rates"
 
   def byteVecToString(bv: ByteVector): String = new String(bv.toArray, "UTF-8")
   type HeightAndHeader = (Int, BlockHeader)
