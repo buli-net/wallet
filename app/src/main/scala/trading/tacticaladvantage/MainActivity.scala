@@ -406,7 +406,7 @@ class MainActivity extends BaseActivity with MnemonicActivity with ExternalDataC
       rootView.setOnLongClickListener(new View.OnLongClickListener {
         override def onLongClick(v: View): Boolean = {
           new AlertDialog.Builder(me).setTitle("Chá»n Fiat")
-            .setItems(names, (d: android.content.DialogInterface, i: Int) => {
+            .setItems(names, (d, i) => {
               WalletApp.app.prefs.edit.putString(WalletApp.FIAT_CODE, codes(i)).apply()
               WalletApp.app.quickToast("ÄĂ£ chá»n " + names(i))
             }).show()
