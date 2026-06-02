@@ -71,19 +71,6 @@ class BtcFeeRates(bag: SQLiteData) extends FeeRates(bag, SQLiteData.LABEL_BTC_FE
   }
 }
 
-class EcxFeeRates(bag: SQLiteData) extends FeeRates(bag, SQLiteData.LABEL_ECX_FEE_RATES) {
-  def reloadData(provider: ConnectionProvider) = FeeratesPerKB(
-    mempoolMinFee = FeeratePerKB(1L.sat),
-    block_1 = FeeratePerKB(1L.sat),
-    blocks_2 = FeeratePerKB(1L.sat),
-    blocks_6 = FeeratePerKB(1L.sat),
-    blocks_12 = FeeratePerKB(1L.sat),
-    blocks_36 = FeeratePerKB(1L.sat),
-    blocks_72 = FeeratePerKB(1L.sat),
-    blocks_144 = FeeratePerKB(1L.sat),
-    blocks_1008 = FeeratePerKB(1L.sat)
-  )
-}
 
 case class FeeRatesInfo(smoothed: FeeratesPerKw, history: List[FeeratesPerKB], stamp: Long) {
   private val targets = FeeTargets(fundingBlockTarget = 36, commitmentBlockTarget = 12, mutualCloseBlockTarget = 72, claimMainBlockTarget = 144)
