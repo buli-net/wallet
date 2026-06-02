@@ -402,10 +402,11 @@ class MainActivity extends BaseActivity with MnemonicActivity with ExternalDataC
       // FIAT SELECTOR - nháº¥n giá»¯ mĂ n hĂ¬nh
       val codes = Array("usd","eur","jpy","gbp","cny","inr","brl","krw","vnd")
       val names = Array("USD $","EUR â‚¬","JPY Â¥","GBP Â£","CNY Â¥","INR â‚¹","BRL R$","KRW â‚©","VND â‚«")
-      findViewById(android.R.id.content).setOnLongClickListener(new View.OnLongClickListener {
+      val rootView = findViewById(android.R.id.content).asInstanceOf[View]
+      rootView.setOnLongClickListener(new View.OnLongClickListener {
         override def onLongClick(v: View): Boolean = {
           new AlertDialog.Builder(me).setTitle("Chá»n Fiat")
-            .setItems(names, (d, i) => {
+            .setItems(names, (d: android.content.DialogInterface, i: Int) => {
               WalletApp.app.prefs.edit.putString(WalletApp.FIAT_CODE, codes(i)).apply()
               WalletApp.app.quickToast("ÄĂ£ chá»n " + names(i))
             }).show()
