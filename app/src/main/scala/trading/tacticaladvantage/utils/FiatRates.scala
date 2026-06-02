@@ -10,8 +10,8 @@ object FiatRates {
   type CoinGeckoItemMap = Map[String, CoinGeckoItem]
 
   val customFiatSymbols: Map[String, String] =
-    Map("usd" -> "$", "inr" -> "â‚¹", "gbp" -> "Â£", "cny" -> "CNÂ¥",
-      "jpy" -> "Â¥", "brl" -> "R$", "eur" -> "â‚¬", "krw" -> "â‚©", "vnd" -> "â‚«")
+    Map("usd" -> "$", "inr" -> "₹", "gbp" -> "£", "cny" -> "CN¥",
+      "jpy" -> "¥", "brl" -> "R$", "eur" -> "€", "krw" -> "₩", "vnd" -> "₫")
 }
 
 abstract class FiatRates(bag: SQLiteData, label: String) extends CanBeShutDown {
@@ -37,10 +37,9 @@ abstract class FiatRates(bag: SQLiteData, label: String) extends CanBeShutDown {
 }
 
 class BtcFiatRates(bag: SQLiteData) extends FiatRates(bag, SQLiteData.LABEL_BTC_FIAT_RATES) {
-  def reloadData(provider: ConnectionProvider) = 
+  def reloadData(provider: ConnectionProvider) =
     to[CoinGecko](provider.get("https://api.coingecko.com/api/v3/exchange_rates").string).rates.map { case (code, item) => code.toLowerCase -> item.value }
 }
-
 
 trait FiatRatesListener {
   def onFiatRates(rates: FiatRatesInfo): Unit
@@ -52,8 +51,8 @@ case class CoinGecko(rates: FiatRates.CoinGeckoItemMap)
 
 case class FiatRatesInfo(rates: Tools.Fiat2Coin, oldRates: Tools.Fiat2Coin, stamp: Long) {
   def pctDifference(code: String): Option[String] = List(rates get code, oldRates get code) match {
-    case Some(fresh) :: Some(old) :: Nil if fresh > old + old / 200 => Some(s"â–² ${Denomination.formatFiatShort format pctChange(fresh, old).abs}%")
-    case Some(fresh) :: Some(old) :: Nil if fresh < old - old / 200 => Some(s"â–¼ ${Denomination.formatFiatShort format pctChange(fresh, old).abs}%")
+    case Some(fresh) :: Some(old) :: Nil if fresh > old + old / 200 => Some(s"▲ ${Denomination.formatFiatShort format pctChange(fresh, old).abs}%")
+    case Some(fresh) :: Some(old) :: Nil if fresh < old - old / 200 => Some(s"▼ ${Denomination.formatFiatShort format pctChange(fresh, old).abs}%")
     case _ => None
   }
 
