@@ -43,9 +43,6 @@ class BtcFiatRates(bag: SQLiteData) extends FiatRates(bag, SQLiteData.LABEL_BTC_
   }
 }
 
-class EcxFiatRates(bag: SQLiteData) extends FiatRates(bag, SQLiteData.LABEL_ECX_FIAT_RATES) {
-  def reloadData(provider: ConnectionProvider) = Map("usd" -> 30D)
-}
 
 trait FiatRatesListener {
   def onFiatRates(rates: FiatRatesInfo): Unit
