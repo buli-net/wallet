@@ -10,8 +10,7 @@ object Denomination {
   val symbols = new DecimalFormatSymbols(locale)
 
   val formatRoi = new DecimalFormat("#,##0.##%", symbols)
-  val formatFiatShort = new DecimalFormat("#,###,###", symbols)
-
+  val formatFiatShort = new DecimalFormat("#,##0.00", symbols)
   def btcBigDecimal2MSat(btc: BigDecimal): MilliSatoshi = (btc * CoinDenom.factor).toLong.msat
   def msat2BtcBigDecimal(msat: MilliSatoshi): BigDecimal = BigDecimal(msat.toLong) / CoinDenom.factor
 
