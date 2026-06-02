@@ -8,7 +8,6 @@ import fr.acinq.eclair.blockchain.fee._
 import fr.acinq.eclair.wire.CommonCodecs._
 import scodec.bits.BitVector
 import spray.json._
-implicit val fiat2CoinFormat: RootJsonFormat[Fiat2Coin] = jsonFormat2(Fiat2Coin)
 import trading.tacticaladvantage.Tools.{Fiat2Coin, StringList}
 import trading.tacticaladvantage._
 import trading.tacticaladvantage.sqlite.SigningWallet
