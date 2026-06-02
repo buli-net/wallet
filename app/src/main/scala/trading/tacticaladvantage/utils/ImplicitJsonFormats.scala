@@ -17,7 +17,9 @@ import scala.util.Try
 
 object ImplicitJsonFormats extends DefaultJsonProtocol {
   
-implicit val fiat2CoinFormat: RootJsonFormat[Fiat2Coin] = jsonFormat2(Fiat2Coin)
+import trading.tacticaladvantage.Tools.Fiat2Coin
+implicit val fiat2CoinFormat: RootJsonFormat[Fiat2Coin] =
+implicitly[RootJsonFormat[Map[String, Double]]]
 
 val json2String: JsValue => String = value => value.convertTo[String]
   def json2BitVec(json: JsValue): Option[BitVector] = BitVector fromHex json2String(json)
