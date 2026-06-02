@@ -35,12 +35,6 @@
                 <ImageView style="@style/BoundedView" android:background="@drawable/ic_logo_bitcoin_24"/>
             </LinearLayout>
 
-            <!-- ECX -->
-
-            <LinearLayout style="@style/Tag" android:gravity="center" android:orientation="horizontal" android:id="@+id/ecxInOut">
-                <ImageView style="@style/BoundedView" android:background="@drawable/ic_logo_ecash_24"/>
-            </LinearLayout>
-
             <!-- incoming boosted -->
 
             <LinearLayout style="@style/Tag" android:gravity="center" android:orientation="horizontal" android:id="@+id/inBoosted">
