@@ -36,7 +36,6 @@
     <string name="dialog_ok">OK</string>
     <string name="dialog_hide">Hide</string>
     <string name="dialog_share">Share</string>
-    <string name="dialog_signup">Sign up</string>
     <string name="dialog_cancel">Cancel</string>
     <string name="dialog_boost">Boost</string>
     <string name="dialog_paste">Paste</string>
