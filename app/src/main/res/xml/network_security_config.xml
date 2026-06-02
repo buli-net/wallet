@@ -1,12 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <network-security-config>
-    <!-- cert pinning -->
-    <!-- $ openssl pkcs12 -in keystore.p12 -clcerts -nokeys -out ta_leaf.pem -->
-    <!-- $ openssl x509 -in ta_leaf.pem -outform DER -out ta_leaf.cer -->
-    <domain-config cleartextTrafficPermitted="false" HSTSEnforced="true">
-        <domain includeSubdomains="false">tactical-advantage.trading</domain>
+    <base-config cleartextTrafficPermitted="false">
         <trust-anchors>
-            <certificates src="@raw/ta_leaf"/>
+            <certificates src="system"/>
         </trust-anchors>
-    </domain-config>
+    </base-config>
 </network-security-config>
