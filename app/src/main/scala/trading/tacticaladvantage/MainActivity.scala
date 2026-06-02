@@ -405,12 +405,10 @@ class MainActivity extends BaseActivity with MnemonicActivity with ExternalDataC
       val rootView = findViewById(android.R.id.content).asInstanceOf[View]
       rootView.setOnLongClickListener(new View.OnLongClickListener {
         override def onLongClick(v: View): Boolean = {
-          new AlertDialog.Builder(me).setTitle("Chon Fiat")
-            .setItems(names, new android.content.DialogInterface.OnClickListener {
-              override def onClick(d: android.content.DialogInterface, which: Int): Unit = {
-                WalletApp.app.prefs.edit.putString(WalletApp.FIAT_CODE, codes(which)).apply()
-                WalletApp.app.quickToast("Da chon " + names(which))
-              }
+          new AlertDialog.Builder(me).setTitle("Chá»n Fiat")
+            .setItems(names, (d: android.content.DialogInterface, i: Int) => {
+              WalletApp.app.prefs.edit.putString(WalletApp.FIAT_CODE, codes(i)).apply()
+              WalletApp.app.quickToast("ÄĂ£ chá»n " + names(i))
             }).show()
           true
         }
