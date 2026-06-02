@@ -19,7 +19,7 @@ object Denomination {
     val (whole, decimal) = amount.splitAt(amount indexOf ".")
 
     val (whole1, decimal1) = if (amount == decimal) (amount, new String) else (whole, decimal take 3)
-    s"<font color=$color>$$${formatFiatShort format amount.toDouble}</font>"
+    s"<font color=$color>${trading.tacticaladvantage.utils.FiatRates.customFiatSymbols.getOrElse(Tools.fiatCode, "$")}${formatFiatShort format amount.toDouble}</font>"
   }
 
   def fiatTT(incoming: String, outgoing: String, inColor: String, outColor: String, isIncoming: Boolean): String =
