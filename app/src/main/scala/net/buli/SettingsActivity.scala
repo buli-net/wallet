@@ -527,9 +527,7 @@ class SettingsActivity
 
     for (count <- LNParams.logBag.count if count > 0) {
       def exportLog(): Unit =
-        share(LNParams.logBag.recent.map(_.asString).mkString("
-
-"))
+        share(LNParams.logBag.recent.map(_.asString).mkString("\n\n"))
       val errorCount =
         s"${getString(R.string.error_log)} $count"
       addFlowChip(
