@@ -22,7 +22,7 @@
     <string name="action_recovery_phrase_hint">Type recovery words</string>
     <string name="swap_label"><![CDATA[%1$s &#x2192; %2$s swap]]></string>
 
-    <!-- Branding - đã thay Tactical Advantage -->
+    <!-- Branding -->
     <string name="dev_info"><![CDATA[Bitcoin only • Your keys, your coins]]></string>
 
     <!-- Settings -->
