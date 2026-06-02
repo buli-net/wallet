@@ -399,22 +399,6 @@ class MainActivity extends BaseActivity with MnemonicActivity with ExternalDataC
   override def START(state: Bundle): Unit = WalletApp.isAlive match {
     case true if WalletApp.isOperational =>
       setContentView(R.layout.activity_main)
-      // FIAT SELECTOR - nháº¥n giá»¯ mĂ n hĂ¬nh
-      val codes = Array("usd","eur","jpy","gbp","cny","inr","brl","krw","vnd")
-      val names: Array[CharSequence] = Array("USD $","EUR â‚¬","JPY Â¥","GBP Â£","CNY Â¥","INR â‚¹","BRL R$","KRW â‚©","VND â‚«")
-      val rootView = findViewById(android.R.id.content).asInstanceOf[View]
-      rootView.setOnLongClickListener(new View.OnLongClickListener {
-        override def onLongClick(v: View): Boolean = {
-          new AlertDialog.Builder(me).setTitle("Chon Fiat")
-            .setItems(names, new android.content.DialogInterface.OnClickListener {
-              override def onClick(d: android.content.DialogInterface, which: Int): Unit = {
-                WalletApp.app.prefs.edit.putString(WalletApp.FIAT_CODE, codes(which)).apply()
-                WalletApp.app.quickToast("Da chon " + names(which))
-              }
-            }).show()
-          true
-        }
-      })
       WalletApp.btc.electrum.catcher ! chainListener
       WalletApp.btc.fiatRates.listeners += fiatListener
       itemsList.addHeaderView(walletCards.view)
