@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="fiat_codes">
+        <item>USD</item><item>EUR</item><item>VND</item><item>JPY</item>
+    </string-array>
+    <string-array name="fiat_names">
+        <item>US Dollar</item><item>Euro</item><item>Vietnam Dong</item><item>Yen</item>
+    </string-array>
+</resources>
