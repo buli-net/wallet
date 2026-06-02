@@ -1,9 +1,9 @@
-package trading.tacticaladvantage.utils
+package net.buli.utils
 
 import rx.lang.scala.Subscription
-import trading.tacticaladvantage.sqlite.SQLiteData
-import trading.tacticaladvantage.utils.ImplicitJsonFormats._
-import trading.tacticaladvantage.{CanBeShutDown, ConnectionProvider, Tools}
+import net.buli.sqlite.SQLiteData
+import net.buli.utils.ImplicitJsonFormats._
+import net.buli.{CanBeShutDown, ConnectionProvider, Tools}
 
 object FiatRates {
   type BlockchainInfoItemMap = Map[String, BlockchainInfoItem]

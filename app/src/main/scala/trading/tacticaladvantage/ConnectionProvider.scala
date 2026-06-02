@@ -1,4 +1,4 @@
-package trading.tacticaladvantage
+package net.buli
 
 import okhttp3.{OkHttpClient, Request, ResponseBody}
 

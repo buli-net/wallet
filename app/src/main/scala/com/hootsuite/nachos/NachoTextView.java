@@ -52,7 +52,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import trading.tacticaladvantage.R;
+import net.buli.R;
 
 /**
  * An editable TextView extending {@link MultiAutoCompleteTextView} that supports "chipifying" pieces of text and displaying suggestions for segments of the text.

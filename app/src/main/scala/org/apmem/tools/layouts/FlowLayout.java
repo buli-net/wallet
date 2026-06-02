@@ -19,7 +19,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
-import trading.tacticaladvantage.R;
+import net.buli.R;
 
 public class FlowLayout extends ViewGroup {
 

@@ -1,4 +1,4 @@
-package trading.tacticaladvantage
+package net.buli
 
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -19,13 +19,13 @@ import fr.acinq.eclair.blockchain.fee.FeeratePerByte
 import org.apmem.tools.layouts.FlowLayout
 import rx.lang.scala.Subscription
 import spray.json._
-import trading.tacticaladvantage.BaseActivity.StringOps
-import trading.tacticaladvantage.MainActivity._
-import trading.tacticaladvantage.R.string._
-import trading.tacticaladvantage.Tools._
-import trading.tacticaladvantage.sqlite.{DbStreams, SQLiteTx}
-import trading.tacticaladvantage.utils.ImplicitJsonFormats._
-import trading.tacticaladvantage.utils._
+import net.buli.BaseActivity.StringOps
+import net.buli.MainActivity._
+import net.buli.R.string._
+import net.buli.Tools._
+import net.buli.sqlite.{DbStreams, SQLiteTx}
+import net.buli.utils.ImplicitJsonFormats._
+import net.buli.utils._
 
 import java.util.{Date, TimerTask}
 import scala.concurrent.Future

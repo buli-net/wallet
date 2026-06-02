@@ -3,7 +3,7 @@ package fr.acinq.eclair.blockchain.electrum
 import fr.acinq.bitcoin.{ByteVector32, encodeCompact}
 import org.json4s.JsonAST.{JArray, JInt, JString}
 import org.json4s.native.JsonMethods
-import trading.tacticaladvantage.sqlite.SQLiteData
+import net.buli.sqlite.SQLiteData
 import java.io.InputStream
 
 

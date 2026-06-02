@@ -12,9 +12,9 @@ import fr.acinq.eclair.blockchain.electrum.db.sqlite.SqliteWalletDb.persistentDa
 import fr.acinq.eclair.blockchain.fee.FeeratePerKw
 import fr.acinq.eclair.{MilliSatoshi, addressToPublicKeyScript}
 import scodec.bits.ByteVector
-import trading.tacticaladvantage.CanBeShutDown
-import trading.tacticaladvantage.Tools._
-import trading.tacticaladvantage.sqlite._
+import net.buli.CanBeShutDown
+import net.buli.Tools._
+import net.buli.sqlite._
 
 import java.util.concurrent.ConcurrentHashMap
 import scala.annotation.tailrec

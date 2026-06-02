@@ -1,4 +1,4 @@
-package trading.tacticaladvantage
+package net.buli
 
 import java.lang.Thread.UncaughtExceptionHandler
 

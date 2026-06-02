@@ -1,4 +1,4 @@
-package trading.tacticaladvantage.sqlite
+package net.buli.sqlite
 
 trait DBInterface {
   def txWrap[T](run: => T): T

@@ -19,7 +19,7 @@ import org.apmem.tools.layouts.logic.ViewDefinition;
 import java.util.ArrayList;
 import java.util.List;
 
-import trading.tacticaladvantage.R;
+import net.buli.R;
 
 public class FlowLayoutManager extends RecyclerView.LayoutManager {
 

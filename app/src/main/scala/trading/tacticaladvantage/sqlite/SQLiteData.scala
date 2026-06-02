@@ -1,14 +1,14 @@
-package trading.tacticaladvantage.sqlite
+package net.buli.sqlite
 
 import fr.acinq.bitcoin.BlockHeader
 import scodec.bits.ByteVector
 import spray.json._
-import trading.tacticaladvantage.MasterKeys.walletSecretCodec
-import trading.tacticaladvantage.Tools._
-import trading.tacticaladvantage.WalletSecret
-import trading.tacticaladvantage.sqlite.SQLiteData._
-import trading.tacticaladvantage.utils.ImplicitJsonFormats._
-import trading.tacticaladvantage.utils.{FeeRatesInfo, FiatRatesInfo}
+import net.buli.MasterKeys.walletSecretCodec
+import net.buli.Tools._
+import net.buli.WalletSecret
+import net.buli.sqlite.SQLiteData._
+import net.buli.utils.ImplicitJsonFormats._
+import net.buli.utils.{FeeRatesInfo, FiatRatesInfo}
 
 import java.lang.{Integer => JInt}
 import scala.util.Try

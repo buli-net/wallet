@@ -1,7 +1,7 @@
 package fr.acinq.eclair.blockchain.electrum
 
 import fr.acinq.bitcoin.{BlockHeader, ByteVector32, decodeCompact}
-import trading.tacticaladvantage.sqlite.SQLiteData
+import net.buli.sqlite.SQLiteData
 
 import java.math.BigInteger
 import scala.annotation.tailrec

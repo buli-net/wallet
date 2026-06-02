@@ -1,4 +1,4 @@
-package trading.tacticaladvantage
+package net.buli
 
 import android.os.Bundle
 import android.view.ViewGroup
@@ -10,9 +10,9 @@ import fr.acinq.bitcoin.DeterministicWallet.ExtendedPublicKey
 import fr.acinq.eclair._
 import fr.acinq.eclair.blockchain.electrum.{ElectrumWallet, WalletSpec}
 import Tools._
-import trading.tacticaladvantage.BaseActivity.StringOps
-import trading.tacticaladvantage.R.string._
-import trading.tacticaladvantage.utils.{CoinDenom, Denomination, InputParser, PlainCoinUri}
+import net.buli.BaseActivity.StringOps
+import net.buli.R.string._
+import net.buli.utils.{CoinDenom, Denomination, InputParser, PlainCoinUri}
 
 import scala.util.Success
 

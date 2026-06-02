@@ -1,4 +1,4 @@
-package trading.tacticaladvantage.utils
+package net.buli.utils
 
 import fr.acinq.bitcoin.Crypto.PublicKey
 import fr.acinq.bitcoin.DeterministicWallet.{ExtendedPrivateKey, ExtendedPublicKey}
@@ -8,10 +8,10 @@ import fr.acinq.eclair.blockchain.fee._
 import fr.acinq.eclair.wire.CommonCodecs._
 import scodec.bits.BitVector
 import spray.json._
-import trading.tacticaladvantage.Tools.{Fiat2Coin, StringList}
-import trading.tacticaladvantage._
-import trading.tacticaladvantage.sqlite.SigningWallet
-import trading.tacticaladvantage.utils.FiatRates.CoinGeckoItemMap
+import net.buli.Tools.{Fiat2Coin, StringList}
+import net.buli._
+import net.buli.sqlite.SigningWallet
+import net.buli.utils.FiatRates.CoinGeckoItemMap
 
 import scala.util.Try
 

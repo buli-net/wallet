@@ -10,7 +10,7 @@ import androidx.annotation.AttrRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import trading.tacticaladvantage.R;
+import net.buli.R;
 
 public class ViewButton extends LinearLayout {
 

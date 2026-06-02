@@ -1,4 +1,4 @@
-package trading.tacticaladvantage
+package net.buli
 
 import fr.acinq.bitcoin.DeterministicWallet.ExtendedPublicKey
 

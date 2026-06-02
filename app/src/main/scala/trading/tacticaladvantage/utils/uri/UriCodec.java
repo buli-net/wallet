@@ -1,4 +1,4 @@
-package trading.tacticaladvantage.utils.uri;
+package net.buli.utils.uri;
 
 /*
  * Copyright (C) 2015 The Android Open Source Project

@@ -1,15 +1,15 @@
-package trading.tacticaladvantage.sheets
+package net.buli.sheets
 
 import android.os.Bundle
 import android.view.{LayoutInflater, View, ViewGroup}
 import android.widget.{ImageButton, TextView}
 import androidx.appcompat.view.ContextThemeWrapper
-import trading.tacticaladvantage.utils.InputParser
-import trading.tacticaladvantage.{BaseActivity, R, WalletApp}
+import net.buli.utils.InputParser
+import net.buli.{BaseActivity, R, WalletApp}
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.journeyapps.barcodescanner.{BarcodeCallback, BarcodeResult, BarcodeView}
 import scala.language.implicitConversions
-import trading.tacticaladvantage.Tools._
+import net.buli.Tools._
 
 
 trait HasBarcodeReader extends BarcodeCallback {

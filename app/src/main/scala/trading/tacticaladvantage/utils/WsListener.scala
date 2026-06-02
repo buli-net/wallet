@@ -1,9 +1,9 @@
-package trading.tacticaladvantage.utils
+package net.buli.utils
 
-import trading.tacticaladvantage.Tools.{Bytes, ThrowableOps}
-import trading.tacticaladvantage.utils.WsListener._
+import net.buli.Tools.{Bytes, ThrowableOps}
+import net.buli.utils.WsListener._
 import com.neovisionaries.ws.client._
-import trading.tacticaladvantage.StateMachine
+import net.buli.StateMachine
 import java.nio.{ByteBuffer, ByteOrder}
 import scala.util.Try
 

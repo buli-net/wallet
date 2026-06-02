@@ -1,4 +1,4 @@
-package trading.tacticaladvantage.utils
+package net.buli.utils
 
 import rx.lang.scala.schedulers.IOScheduler
 import rx.lang.scala.{Observable, Subscription}

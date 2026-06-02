@@ -1,4 +1,4 @@
-package trading.tacticaladvantage.sqlite
+package net.buli.sqlite
 
 import android.content.Context
 import android.database.sqlite.{SQLiteDatabase, SQLiteOpenHelper}

@@ -1,5 +1,5 @@
 
-package trading.tacticaladvantage
+package net.buli
 
 import akka.actor.{PoisonPill, Props}
 import android.app.Application
@@ -17,9 +17,9 @@ import fr.acinq.eclair._
 import fr.acinq.eclair.blockchain.electrum.ElectrumWallet.TransactionReceived
 import fr.acinq.eclair.blockchain.electrum._
 import Tools._
-import trading.tacticaladvantage.R.string._
-import trading.tacticaladvantage.sqlite._
-import trading.tacticaladvantage.utils._
+import net.buli.R.string._
+import net.buli.sqlite._
+import net.buli.utils._
 
 import java.io.InputStream
 import java.net.InetSocketAddress

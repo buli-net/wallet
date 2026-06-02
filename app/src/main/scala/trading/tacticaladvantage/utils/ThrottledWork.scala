@@ -1,6 +1,6 @@
-package trading.tacticaladvantage.utils
+package net.buli.utils
 
-import trading.tacticaladvantage.Tools.{Any2Some, none}
+import net.buli.Tools.{Any2Some, none}
 import rx.lang.scala.Subscription
 
 

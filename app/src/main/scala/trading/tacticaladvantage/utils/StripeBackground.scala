@@ -1,4 +1,4 @@
-package trading.tacticaladvantage.utils
+package net.buli.utils
 
 import android.animation.ValueAnimator
 import android.content.Context
@@ -6,7 +6,7 @@ import android.graphics.{Canvas, Paint, Path, RectF}
 import android.util.AttributeSet
 import android.view.View
 import android.view.animation.LinearInterpolator
-import trading.tacticaladvantage.R
+import net.buli.R
 
 
 class StripeBackground(context: Context, attrs: AttributeSet, defStyleAttr: Int ) extends View(context, attrs, defStyleAttr) {

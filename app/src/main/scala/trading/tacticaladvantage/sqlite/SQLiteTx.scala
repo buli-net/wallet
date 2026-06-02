@@ -1,12 +1,12 @@
-package trading.tacticaladvantage.sqlite
+package net.buli.sqlite
 
 import fr.acinq.bitcoin.DeterministicWallet.ExtendedPublicKey
 import fr.acinq.bitcoin.{ByteVector32, Satoshi, Transaction}
 import fr.acinq.eclair.MilliSatoshi
-import trading.tacticaladvantage.Tools.Fiat2Coin
-import trading.tacticaladvantage.utils.ImplicitJsonFormats._
+import net.buli.Tools.Fiat2Coin
+import net.buli.utils.ImplicitJsonFormats._
 import spray.json._
-import trading.tacticaladvantage.{CoinDescription, CoinDetails}
+import net.buli.{CoinDescription, CoinDetails}
 
 import java.lang.{Long => JLong}
 

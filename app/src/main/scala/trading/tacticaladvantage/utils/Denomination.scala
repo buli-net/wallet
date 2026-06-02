@@ -1,4 +1,4 @@
-package trading.tacticaladvantage.utils
+package net.buli.utils
 
 import fr.acinq.eclair._
 

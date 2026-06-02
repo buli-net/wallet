@@ -1,11 +1,11 @@
-package trading.tacticaladvantage.utils
+package net.buli.utils
 
 import fr.acinq.bitcoin.{BtcAmount, Satoshi, SatoshiLong}
 import fr.acinq.eclair._
 import fr.acinq.eclair.blockchain.electrum.Electrum
-import trading.tacticaladvantage.Tools._
-import trading.tacticaladvantage.CoinDescription
-import trading.tacticaladvantage.utils.uri.Uri
+import net.buli.Tools._
+import net.buli.CoinDescription
+import net.buli.utils.uri.Uri
 
 import scala.util.parsing.combinator.RegexParsers
 import scala.util.{Success, Try}

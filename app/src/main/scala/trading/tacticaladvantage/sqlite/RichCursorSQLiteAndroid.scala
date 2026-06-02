@@ -1,7 +1,7 @@
-package trading.tacticaladvantage.sqlite
+package net.buli.sqlite
 
 import android.database.Cursor
-import trading.tacticaladvantage.Tools.{Bytes, runAnd}
+import net.buli.Tools.{Bytes, runAnd}
 
 import scala.util.Try
 

@@ -6,11 +6,11 @@ plugins {
 scala.scalaVersion = "2.11.12"
 
 android {
-    namespace = "trading.tacticaladvantage"
+    namespace = "net.buli"
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "trading.tacticaladvantage"
+        applicationId = "net.buli"
         versionName = "3.3"
         versionCode = 10
         targetSdk = 36

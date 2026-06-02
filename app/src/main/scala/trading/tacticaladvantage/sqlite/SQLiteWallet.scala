@@ -1,11 +1,11 @@
-package trading.tacticaladvantage.sqlite
+package net.buli.sqlite
 
 import fr.acinq.bitcoin.Crypto.PublicKey
 import fr.acinq.bitcoin.DeterministicWallet.ExtendedPrivateKey
 import fr.acinq.bitcoin.Satoshi
 import fr.acinq.eclair.blockchain.electrum.PersistentData
 import fr.acinq.eclair.blockchain.electrum.db.sqlite.SqliteWalletDb.persistentDataCodec
-import trading.tacticaladvantage.utils.ImplicitJsonFormats._
+import net.buli.utils.ImplicitJsonFormats._
 import scodec.bits.ByteVector
 import spray.json._
 

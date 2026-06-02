@@ -1,9 +1,9 @@
-package trading.tacticaladvantage
+package net.buli
 
 import fr.acinq.bitcoin.{ByteVector32, Satoshi, Transaction}
 import fr.acinq.eclair._
-import trading.tacticaladvantage.Tools.{Any2Some, ExtPubKeys, SEPARATOR, StringList}
-import trading.tacticaladvantage.utils.ImplicitJsonFormats._
+import net.buli.Tools.{Any2Some, ExtPubKeys, SEPARATOR, StringList}
+import net.buli.utils.ImplicitJsonFormats._
 
 import java.util.Date
 

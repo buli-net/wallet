@@ -1,6 +1,6 @@
-package trading.tacticaladvantage
+package net.buli
 
-import trading.tacticaladvantage.Tools.{Bytes, StringList}
+import net.buli.Tools.{Bytes, StringList}
 import fr.acinq.bitcoin.DeterministicWallet._
 import fr.acinq.eclair.wire.CommonCodecs._
 import scodec.Codec

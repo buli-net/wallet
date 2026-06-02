@@ -1,11 +1,11 @@
-package trading.tacticaladvantage.sheets
+package net.buli.sheets
 
 import android.os.Bundle
 import android.view.{LayoutInflater, View, ViewGroup}
 import android.widget.ListView
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import trading.tacticaladvantage.R
-import trading.tacticaladvantage.utils.OnListItemClickListener
+import net.buli.R
+import net.buli.utils.OnListItemClickListener
 
 class ChoiceBottomSheet(list: ListView, onChoice: Int => Unit) extends BottomSheetDialogFragment {
   override def onCreateView(inflater: LayoutInflater, container: ViewGroup, state: Bundle): View = list

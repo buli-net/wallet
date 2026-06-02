@@ -1,4 +1,4 @@
-package trading.tacticaladvantage
+package net.buli
 
 import android.content.pm.PackageManager
 import android.content.{DialogInterface, Intent}
@@ -29,9 +29,9 @@ import fr.acinq.eclair.blockchain.electrum._
 import fr.acinq.eclair.blockchain.fee.{FeeratePerByte, FeeratePerKw}
 import Tools._
 import org.apmem.tools.layouts.FlowLayout
-import trading.tacticaladvantage.BaseActivity.StringOps
-import trading.tacticaladvantage.R.string._
-import trading.tacticaladvantage.utils.{CoinDenom, Denomination, FiatRates, InputParser, ThrottledWork}
+import net.buli.BaseActivity.StringOps
+import net.buli.R.string._
+import net.buli.utils.{CoinDenom, Denomination, FiatRates, InputParser, ThrottledWork}
 
 import java.io.{File, FileOutputStream}
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -365,7 +365,7 @@ trait QRActivity extends BaseCheckActivity { me =>
     bitmap.compress(Bitmap.CompressFormat.PNG, 85, out)
     out.close
     val savedFile = new File(paymentRequestFilePath, "qr.png")
-    val fileURI = FileProvider.getUriForFile(me, "trading.tacticaladvantage", savedFile)
+    val fileURI = FileProvider.getUriForFile(me, "net.buli", savedFile)
     val share = new Intent setAction Intent.ACTION_SEND setType "text/plain" addFlags Intent.FLAG_GRANT_READ_URI_PERMISSION
     share.putExtra(Intent.EXTRA_TEXT, text).putExtra(Intent.EXTRA_STREAM, fileURI).setDataAndType(fileURI, getContentResolver getType fileURI)
     me startActivity Intent.createChooser(share, "Choose an app")

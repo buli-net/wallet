@@ -1,6 +1,6 @@
-package trading.tacticaladvantage.sqlite
+package net.buli.sqlite
 
-import trading.tacticaladvantage.Tools.Bytes
+import net.buli.Tools.Bytes
 
 import java.lang.{Double => JDouble, Integer => JInt, Long => JLong}
 import java.sql.PreparedStatement

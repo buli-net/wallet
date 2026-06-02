@@ -1,6 +1,6 @@
-package trading.tacticaladvantage.sqlite
+package net.buli.sqlite
 
-import trading.tacticaladvantage.Tools.Bytes
+import net.buli.Tools.Bytes
 import scodec.bits.ByteVector
 
 import java.sql.ResultSet

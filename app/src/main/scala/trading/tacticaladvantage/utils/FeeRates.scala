@@ -1,12 +1,12 @@
-package trading.tacticaladvantage.utils
+package net.buli.utils
 
 import fr.acinq.bitcoin._
 import fr.acinq.eclair.blockchain.fee._
 import rx.lang.scala.Subscription
-import trading.tacticaladvantage.sqlite.SQLiteData
-import trading.tacticaladvantage.utils.FeeRates._
-import trading.tacticaladvantage.utils.ImplicitJsonFormats._
-import trading.tacticaladvantage.{CanBeShutDown, ConnectionProvider}
+import net.buli.sqlite.SQLiteData
+import net.buli.utils.FeeRates._
+import net.buli.utils.ImplicitJsonFormats._
+import net.buli.{CanBeShutDown, ConnectionProvider}
 
 object FeeRates {
   val minPerKw: FeeratePerKw = FeeratePerKw(1000L.sat)

@@ -1,4 +1,4 @@
-package trading.tacticaladvantage.utils;
+package net.buli.utils;
 
 import android.view.View;
 import android.widget.AdapterView;

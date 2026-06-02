@@ -1,4 +1,4 @@
-package trading.tacticaladvantage
+package net.buli
 
 import android.os.Bundle
 import android.view.View
@@ -6,8 +6,8 @@ import android.widget._
 import androidx.appcompat.app.AlertDialog
 import fr.acinq.bitcoin.MnemonicCode
 import Tools._
-import trading.tacticaladvantage.BaseActivity.StringOps
-import trading.tacticaladvantage.R.string._
+import net.buli.BaseActivity.StringOps
+import net.buli.R.string._
 
 trait MnemonicActivity { me: BaseActivity =>
   def showMnemonicInput(titleRes: Int)(proceedWithMnemonics: StringList => Unit): Unit = {
