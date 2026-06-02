@@ -13,6 +13,7 @@ object Tools {
   type Fiat2Coin = Map[String, Double]
   type ExtPubKeys = List[ExtendedPublicKey]
   final val SEPARATOR = " "
+  def fiatCode: String = WalletApp.app.prefs.getString(WalletApp.FIAT_CODE, "usd")
 
   def minOptionBy[A, B: Ordering](seq: Seq[A] = Nil)(f: A => B) = seq.reduceOption(Ordering.by(f).min)
   def minOptionByValue[A, B: Ordering](seq: Seq[A] = Nil)(f: A => B, default: B) = minOptionBy(seq)(f).map(f).getOrElse(default)
