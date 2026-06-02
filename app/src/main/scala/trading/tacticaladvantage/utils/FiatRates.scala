@@ -8,10 +8,6 @@ import trading.tacticaladvantage.{CanBeShutDown, ConnectionProvider, Tools}
 object FiatRates {
   type BlockchainInfoItemMap = Map[String, BlockchainInfoItem]
   type CoinGeckoItemMap = Map[String, CoinGeckoItem]
-
-  val customFiatSymbols: Map[String, String] =
-    Map("usd" -> "$", "inr" -> "\u20B9", "gbp" -> "\u00A3", "cny" -> "CN\u00A5",
-      "jpy" -> "\u00A5", "brl" -> "R$", "eur" -> "\u20AC", "krw" -> "\u20A9", "vnd" -> "\u20AB")
 }
 
 abstract class FiatRates(bag: SQLiteData, label: String) extends CanBeShutDown {
@@ -22,6 +18,10 @@ abstract class FiatRates(bag: SQLiteData, label: String) extends CanBeShutDown {
     info = FiatRatesInfo(newRates, info.rates, System.currentTimeMillis)
     for (lst <- listeners) lst.onFiatRates(info)
   }
+
+  val customFiatSymbols: Map[String, String] =
+    Map("usd" -> "$", "inr" -> "₹", "gbp" -> "£", "cny" -> "CN¥",
+      "jpy" -> "¥", "brl" -> "R$", "eur" -> "€", "krw" -> "₩")
 
   var listeners: Set[FiatRatesListener] = Set {
     new FiatRatesListener {
@@ -37,9 +37,12 @@ abstract class FiatRates(bag: SQLiteData, label: String) extends CanBeShutDown {
 }
 
 class BtcFiatRates(bag: SQLiteData) extends FiatRates(bag, SQLiteData.LABEL_BTC_FIAT_RATES) {
-  def reloadData(provider: ConnectionProvider) =
-    to[CoinGecko](provider.get("https://api.coingecko.com/api/v3/exchange_rates").string).rates.map { case (code, item) => code.toLowerCase -> item.value }
+  def reloadData(provider: ConnectionProvider) = fr.acinq.eclair.secureRandom nextInt 2 match {
+    case 0 => to[CoinGecko](provider.get("https://api.coingecko.com/api/v3/exchange_rates").string).rates.map { case (code, item) => code.toLowerCase -> item.value }
+    case 1 => to[FiatRates.BlockchainInfoItemMap](provider.get("https://blockchain.info/ticker").string).map { case (code, item) => code.toLowerCase -> item.last }
+  }
 }
+
 
 trait FiatRatesListener {
   def onFiatRates(rates: FiatRatesInfo): Unit
