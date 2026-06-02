@@ -10,8 +10,8 @@ object FiatRates {
   type CoinGeckoItemMap = Map[String, CoinGeckoItem]
 
   val customFiatSymbols: Map[String, String] =
-    Map("usd" -> "$", "inr" -> "₹", "gbp" -> "£", "cny" -> "CN¥",
-      "jpy" -> "¥", "brl" -> "R$", "eur" -> "€", "krw" -> "₩", "vnd" -> "₫")
+    Map("usd" -> "$", "inr" -> "\u20B9", "gbp" -> "\u00A3", "cny" -> "CN\u00A5",
+      "jpy" -> "\u00A5", "brl" -> "R$", "eur" -> "\u20AC", "krw" -> "\u20A9", "vnd" -> "\u20AB")
 }
 
 abstract class FiatRates(bag: SQLiteData, label: String) extends CanBeShutDown {
