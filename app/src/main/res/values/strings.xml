@@ -22,7 +22,7 @@
     <string name="action_recovery_phrase_hint">Type recovery words</string>
     <string name="swap_label"><![CDATA[%1$s &#x2192; %2$s swap]]></string>
 
-    <!-- Branding -->
+    <!-- Branding - đã thay Tactical Advantage -->
     <string name="dev_info"><![CDATA[Bitcoin only • Your keys, your coins]]></string>
 
     <!-- Settings -->
@@ -36,6 +36,7 @@
     <string name="dialog_ok">OK</string>
     <string name="dialog_hide">Hide</string>
     <string name="dialog_share">Share</string>
+    <string name="dialog_signup">Sign up</string>
     <string name="dialog_cancel">Cancel</string>
     <string name="dialog_boost">Boost</string>
     <string name="dialog_paste">Paste</string>
