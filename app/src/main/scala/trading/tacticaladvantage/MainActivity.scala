@@ -1,7 +1,6 @@
 package trading.tacticaladvantage
 
 import android.content.Intent
-import android.view.WindowManager
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle

@@ -1,10 +1,8 @@
+
 package trading.tacticaladvantage
 
 import akka.actor.{PoisonPill, Props}
-import spray.json._
-import trading.tacticaladvantage.utils.ImplicitJsonFormats._
 import android.app.Application
-import spray.json.DefaultJsonProtocol._
 import android.content._
 import android.icu.text.RelativeDateTimeFormatter.{Direction, RelativeUnit, Style}
 import android.icu.text.{DisplayContext, NumberFormat, RelativeDateTimeFormatter}
@@ -192,8 +190,8 @@ object WalletApp {
   def currentMsatInFiatHuman(fr: FiatRates, msat: MilliSatoshi): String = msatInFiatHuman(fr, fiatCode, msat, Denomination.formatFiatShort)
 
   def msatInFiatHuman(fr: FiatRates, code: String, msat: MilliSatoshi, decimalFormat: DecimalFormat): String = {
-    val fiatAmount: String = msatInFiat(fr.info.rates, code)(msat).map(decimalFormat.format).getOrElse("?")
-    fr.customFiatSymbols.get(code.toLowerCase).map(sign => s"$sign$fiatAmount").getOrElse(s"$fiatAmount ${code.toUpperCase}")
+    val fiatAmount: String = msatInFiat(fr.info.rates, code)(msat).map(decimalFormat.format).getOrElse(default = "?")
+    fr.customFiatSymbols.get(code).map(sign => s"$sign$fiatAmount").getOrElse(s"$fiatAmount $code")
   }
 
   val uLocale = ULocale.forLocale(Locale.getDefault)
