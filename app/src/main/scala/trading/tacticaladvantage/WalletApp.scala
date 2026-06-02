@@ -1,4 +1,3 @@
-
 package trading.tacticaladvantage
 
 import akka.actor.{PoisonPill, Props}
@@ -74,7 +73,7 @@ class NetworkWalletGroup(val netId: Int, val ticker: String, val prefix: String,
     electrum.catcher ! new WalletEventsListener {
       override def onTransactionReceived(event: TransactionReceived): Unit = {
         def addTx(received: Satoshi, sent: Satoshi, fee: Satoshi, description: CoinDescription, isIncoming: Long): Unit = txDataBag.db txWrap {
-          txDataBag.addTx(event.tx, event.depth, received, sent, fee, event.xPubs, description, isIncoming, fiatRates.info.rates, event.stamp)
+          txDataBag.addTx(event.tx, event.depth, received, sent, fee, event.xPubs, description, isIncoming, fiatRates.info.rates.toJson.compactPrint, event.stamp)
           txDataBag.addSearchableTransaction(description.queryText(event.tx.txid), event.tx.txid)
           WalletApp.pendingInfos.remove(event.tx.txid.toHex)
         }
@@ -190,8 +189,8 @@ object WalletApp {
   def currentMsatInFiatHuman(fr: FiatRates, msat: MilliSatoshi): String = msatInFiatHuman(fr, fiatCode, msat, Denomination.formatFiatShort)
 
   def msatInFiatHuman(fr: FiatRates, code: String, msat: MilliSatoshi, decimalFormat: DecimalFormat): String = {
-    val fiatAmount: String = msatInFiat(fr.info.rates, code)(msat).map(decimalFormat.format).getOrElse(default = "?")
-    fr.customFiatSymbols.get(code).map(sign => s"$sign$fiatAmount").getOrElse(s"$fiatAmount $code")
+    val fiatAmount: String = msatInFiat(fr.info.rates, code)(msat).map(decimalFormat.format).getOrElse("?")
+    fr.customFiatSymbols.get(code.toLowerCase).map(sign => s"$sign$fiatAmount").getOrElse(s"$fiatAmount ${code.toUpperCase}")
   }
 
   val uLocale = ULocale.forLocale(Locale.getDefault)
