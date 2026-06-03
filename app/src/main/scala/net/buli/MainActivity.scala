@@ -1,4 +1,4 @@
-qpackage net.buli
+package net.buli
 
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -707,7 +707,6 @@ class MainActivity extends BaseActivity with MnemonicActivity with ExternalDataC
       val change = WalletApp.btc.fiatRates.info.pctDifference(WalletApp.fiatCode).getOrElse(new String)
       val unitRate = WalletApp.msatInFiatHuman(WalletApp.btc.fiatRates, WalletApp.fiatCode, coin, Denomination.formatFiatShort)
       fiatUnitPriceAndChange.setText(s"BTC &middot; $unitRate $change".html)
-
       manager.cardViews.foreach(_.updateView)
       settingsButtons.removeAllViewsInLayout
       setVis(isVisible = isSettingsOn, view = settingsButtons)
