@@ -703,18 +703,26 @@ class MainActivity extends BaseActivity with MnemonicActivity with ExternalDataC
     }
 
     def resetCards: Unit = { holder.removeAllViewsInLayout; manager.init(makeCards); updateView }
-    def updateView: Unit = {
-      val change = WalletApp.btc.fiatRates.info.pctDifference(WalletApp.fiatCode).getOrElse(new String)
-      val unitRate = WalletApp.msatInFiatHuman(WalletApp.btc.fiatRates, WalletApp.fiatCode, coin, Denomination.formatFiatShort)
+  //  def updateView: Unit = {
+   //   val change = WalletApp.btc.fiatRates.info.pctDifference(WalletApp.fiatCode).getOrElse(new String)
+    //  val unitRate = WalletApp.msatInFiatHuman(WalletApp.btc.fiatRates, WalletApp.fiatCode, coin, Denomination.formatFiatShort)
       fiatUnitPriceAndChange.setText(s"BTC &middot; $unitRate $change".html)
-//////////////
+///////////
 
-// đổi màu: tăng xanh, giảm đỏ, không đổi cam
-      val changeColor = if (change.contains("▲") || change.trim.startsWith("+")) "#00C853" else if (change.contains("▼") || change.trim.startsWith("-")) "#D50000" else "#FF9800"
-      val coloredChange = if (change.isEmpty) "" else s"<font color='$changeColor'>$change</font>"
-   //   fiatUnitPriceAndChange.setText(s"BTC &middot; $unitRate $coloredChange".html)
+def updateView: Unit = {
+  val changeRaw = WalletApp.btc.fiatRates.info.pctDifference(WalletApp.fiatCode).getOrElse("0.00%")
+  val unitRate = WalletApp.msatInFiatHuman(WalletApp.btc.fiatRates, WalletApp.fiatCode, coin, Denomination.formatFiatShort)
+  
+  // --- giữ nguyên ký tự ▼ / ▲ và % ---
+  val changeColor = 
+    if (changeRaw.contains("▲") || changeRaw.trim.startsWith("+")) "#00C853"  // tăng = xanh
+    else if (changeRaw.contains("▼") || changeRaw.trim.startsWith("-")) "#D50000"  // giảm = đỏ
+    else "#FF9800" // không đổi = cam
 
-fiatUnitPriceAndChange.setText(s"<font color='$changeColor'>BTC &middot; $unitRate $change</font>".html)
+  val coloredChange = s"<font color='$changeColor'>$changeRaw</font>"
+  fiatUnitPriceAndChange.setText(s"BTC &middot; $unitRate $coloredChange".html)
+
+
 //////////////
 
       manager.cardViews.foreach(_.updateView)
