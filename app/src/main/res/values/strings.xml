@@ -42,20 +42,7 @@
     <string name="dialog_copy">Copy</string>
     <string name="dialog_edit">Edit</string>
     <string name="dialog_max">Max</string>
-
-    <string name="dialog_stamp">Stamp</string>
-    <string name="dialog_accept">Accept</string>
-   
-    <string name="dialog_split">Split</string>
-   
-    <string name="dialog_break">Break</string>
-    <string name="dialog_open">Open</string>
   
-    <string name="dialog_scan">Scan</string>
-    <string name="dialog_info">Info</string>
-  
-
-
 
     <!-- Dialog Content -->
     <string name="dialog_receive_address"><![CDATA[Your address]]></string>
