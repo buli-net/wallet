@@ -706,7 +706,7 @@ class MainActivity extends BaseActivity with MnemonicActivity with ExternalDataC
   //  def updateView: Unit = {
    //   val change = WalletApp.btc.fiatRates.info.pctDifference(WalletApp.fiatCode).getOrElse(new String)
     //  val unitRate = WalletApp.msatInFiatHuman(WalletApp.btc.fiatRates, WalletApp.fiatCode, coin, Denomination.formatFiatShort)
-      fiatUnitPriceAndChange.setText(s"BTC &middot; $unitRate $change".html)
+     // fiatUnitPriceAndChange.setText(s"BTC &middot; $unitRate $change".html)
 ///////////
 
 def updateView: Unit = {
