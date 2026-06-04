@@ -668,83 +668,81 @@ class MainActivity extends BaseActivity with MnemonicActivity with ExternalDataC
     }
   }
 
-////view setting
-class WalletCardsViewHolder {
-  val view = getLayoutInflater.inflate(R.layout.frag_wallet_cards, null).asInstanceOf[LinearLayout]
-  val fiatUnitPriceAndChange = view.findViewById(R.id.fiatUnitPriceAndChange).asInstanceOf[TextView]
-  val holder = view.findViewById(R.id.chainCardsContainer).asInstanceOf[LinearLayout]
-  val recentActivity = view.findViewById(R.id.recentActivity).asInstanceOf[View]
-  val manager = new WalletCardManager(holder)
-  val settingsContainer = view.findViewById(R.id.settingsContainer).asInstanceOf[LinearLayout]
-  val devInfo = me clickableTextField settingsContainer.findViewById(R.id.devInfo).asInstanceOf[TextView]
-  val settingsButtons = settingsContainer.findViewById(R.id.settingsButtons).asInstanceOf[FlowLayout]
-  val nameAndVer = settingsContainer.findViewById(R.id.nameAndVer).asInstanceOf[TextView]
-  val appName = s"${me getString app_name} <font color=$cardZero>v3.3-8</font>"
-  val coin = 100000000000L.msat
-  devInfo.setText(getString(dev_info).html)
-  nameAndVer.setText(appName.html)
+  // view setting
+  class WalletCardsViewHolder {
+    val view = getLayoutInflater.inflate(R.layout.frag_wallet_cards, null).asInstanceOf[LinearLayout]
+    val fiatUnitPriceAndChange = view.findViewById(R.id.fiatUnitPriceAndChange).asInstanceOf[TextView]
+    val holder = view.findViewById(R.id.chainCardsContainer).asInstanceOf[LinearLayout]
+    val recentActivity = view.findViewById(R.id.recentActivity).asInstanceOf[View]
+    val manager = new WalletCardManager(holder)
+    val settingsContainer = view.findViewById(R.id.settingsContainer).asInstanceOf[LinearLayout]
+    val devInfo = me.clickableTextField(settingsContainer.findViewById(R.id.devInfo).asInstanceOf[TextView])
+    val settingsButtons = settingsContainer.findViewById(R.id.settingsButtons).asInstanceOf[FlowLayout]
+    val nameAndVer = settingsContainer.findViewById(R.id.nameAndVer).asInstanceOf[TextView]
+    val appName = s"${me.getString(app_name)} <font color=$cardZero>v3.3-8</font>"
+    val coin = 100000000000L.msat
+    devInfo.setText(getString(dev_info).html)
+    nameAndVer.setText(appName.html)
 
-  def attachWallet = showMnemonicInput(action_recovery_phrase_title) { mnemonic =>
-    val attachedKeys = MasterKeys.fromSeed(MnemonicCode.toSeed(mnemonic, new String).toArray)
-    WalletApp.btc.attachWallet(attachedKeys.bitcoinMaster, ElectrumWallet.BIP84)
-    WalletApp.btc.attachWallet(attachedKeys.bitcoinMaster, ElectrumWallet.BIP44)
-    WalletApp.btc.attachWallet(attachedKeys.bitcoinMaster, ElectrumWallet.BIP32)
-  }
-
-  def makeCards = {
-    val coinCards = for {
-      group <- List(WalletApp.btc)
-      xPub <- group.electrum.specs.keys.toList
-      dest = classOf[QRCoinActivity]
-    } yield new CoinWalletCard(xPub, group) {
-      override def onTap: Unit = goToWithValue(dest, group -> xPub)
-      override def hide: Unit = group.removeWallet(key = xPub)
+    def attachWallet = showMnemonicInput(action_recovery_phrase_title) { mnemonic =>
+      val attachedKeys = MasterKeys.fromSeed(MnemonicCode.toSeed(mnemonic, new String).toArray)
+      WalletApp.btc.attachWallet(attachedKeys.bitcoinMaster, ElectrumWallet.BIP84)
+      WalletApp.btc.attachWallet(attachedKeys.bitcoinMaster, ElectrumWallet.BIP44)
+      WalletApp.btc.attachWallet(attachedKeys.bitcoinMaster, ElectrumWallet.BIP32)
     }
-    coinCards
+
+    def makeCards = {
+      val coinCards = for {
+        group <- List(WalletApp.btc)
+        xPub <- group.electrum.specs.keys.toList
+        dest = classOf[QRCoinActivity]
+      } yield new CoinWalletCard(xPub, group) {
+        override def onTap: Unit = goToWithValue(dest, group -> xPub)
+        override def hide: Unit = group.removeWallet(key = xPub)
+      }
+      coinCards
+    }
+
+    def resetCards: Unit = { holder.removeAllViewsInLayout; manager.init(makeCards); updateView }
+
+    def updateView: Unit = {
+      val change = WalletApp.btc.fiatRates.info.pctDifference(WalletApp.fiatCode).getOrElse(new String)
+      val unitRate = WalletApp.msatInFiatHuman(WalletApp.btc.fiatRates, WalletApp.fiatCode, coin, Denomination.formatFiatShort)
+      fiatUnitPriceAndChange.setText(s"BTC &middot; $unitRate $change".html)
+      manager.cardViews.foreach(_.updateView)
+      settingsButtons.removeAllViewsInLayout
+      setVis(isVisible = isSettingsOn, view = settingsButtons)
+      for (view <- manager.cardViews) setVis(isSettingsOn, view.cardButtons)
+      if (isSettingsOn) {
+        val msg = getString(settings_show)
+        val hasNativeBtc = WalletApp.btc.electrum.specs.values.exists(_.info.core.attachedMaster.isEmpty)
+        if (!hasNativeBtc) addFlowChip(settingsButtons, msg.format(WalletApp.btc.ticker), R.drawable.border_white) {
+          WalletApp.btc.postInitWallet(WalletApp.btc.createWallet(ord = 0L, WalletApp.secret.keys.bitcoinMaster))
+        }
+        addFlowChip(settingsButtons, getString(settings_view_recovery_phrase), R.drawable.border_white)(viewRecoveryCode)
+        addFlowChip(settingsButtons, getString(settings_attach_wallet), R.drawable.border_white)(attachWallet)
+        addFlowChip(settingsButtons, "Fiat: " + WalletApp.fiatCode.toUpperCase, R.drawable.border_white) {
+          me.showFiatChooser()
+        }
+      }
+    }
   }
 
-  def resetCards: Unit = { holder.removeAllViewsInLayout; manager.init(makeCards); updateView }
-
-  def updateView: Unit = {
-    val change = WalletApp.btc.fiatRates.info.pctDifference(WalletApp.fiatCode).getOrElse(new String)
-    val unitRate = WalletApp.msatInFiatHuman(WalletApp.btc.fiatRates, WalletApp.fiatCode, coin, Denomination.formatFiatShort)
-    fiatUnitPriceAndChange.setText(s"BTC &middot; $unitRate $change".html)
-    manager.cardViews.foreach(_.updateView)
-    settingsButtons.removeAllViewsInLayout
-    setVis(isVisible = isSettingsOn, view = settingsButtons)
-    for (view <- walletCards.manager.cardViews) setVis(isSettingsOn, view.cardButtons)
-    if (isSettingsOn) {
-      val msg = getString(settings_show)
-      val hasNativeBtc = WalletApp.btc.electrum.specs.values.exists(_.info.core.attachedMaster.isEmpty)
-      if (!hasNativeBtc) addFlowChip(settingsButtons, msg.format(WalletApp.btc.ticker), R.drawable.border_white) {
-        WalletApp.btc postInitWallet WalletApp.btc.createWallet(ord = 0L, WalletApp.secret.keys.bitcoinMaster)
-      }
-      // add button menu setsettin
-
-      addFlowChip(settingsButtons, getString(settings_view_recovery_phrase), R.drawable.border_white)(viewRecoveryCode)
-      addFlowChip(settingsButtons, getString(settings_attach_wallet), R.drawable.border_white)(attachWallet)
-      // Fiat button - sửa cách gọi để truyền function (=> Unit)
-
- // FIX CHÍNH: bỏ () => , gọi trực tiếp
-    addFlowChip(settingsButtons, "Fiat: " + WalletApp.fiatCode.toUpperCase, R.drawable.border_white) {
-      showFiatChooser()
+  def showFiatChooser(): Unit = {
+    val codes = WalletApp.btc.fiatRates.info.rates.keys.toList.sorted
+    if (codes.isEmpty) { WalletApp.app.quickToast("Rates not loaded"); return }
+    val labels = codes.map(_.toUpperCase).toArray
+    new AlertDialog.Builder(me)
+      .setTitle("Chọn tiền tệ")
+      .setItems(labels, new android.content.DialogInterface.OnClickListener {
+        override def onClick(d: android.content.DialogInterface, which: Int): Unit = {
+          val chosen = codes(which)
+          me.getSharedPreferences("wallet", 0).edit().putString("fiat_code", chosen).apply()
+          WalletApp.fiatCode = chosen
+          walletCards.updateView()
+        }
+      })
+      .setNegativeButton(android.R.string.cancel, null)
+      .show()
   }
-}
-}
-def showFiatChooser(): Unit = {
-  val codes = WalletApp.btc.fiatRates.info.rates.keys.toList.sorted
-  if (codes.isEmpty) { WalletApp.app.quickToast("Rates not loaded"); return }
-  val labels = codes.map(_.toUpperCase).toArray
-  new AlertDialog.Builder(me)
-    .setTitle("Chọn tiền tệ")
-    .setItems(labels, new android.content.DialogInterface.OnClickListener {
-      override def onClick(d: android.content.DialogInterface, which: Int): Unit = {
-        val chosen = codes(which)
-        me.getSharedPreferences("wallet", 0).edit.putString("fiat_code", chosen).apply()
-        WalletApp.fiatCode = chosen
-        updateView()
-      }
-    })
-    .setNegativeButton(android.R.string.cancel, null)
-    .show()
 }
