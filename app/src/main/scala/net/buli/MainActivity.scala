@@ -717,6 +717,15 @@ class MainActivity extends BaseActivity with MnemonicActivity with ExternalDataC
         if (!hasNativeBtc) addFlowChip(settingsButtons, msg.format(WalletApp.btc.ticker), R.drawable.border_white) {
           WalletApp.btc postInitWallet WalletApp.btc.createWallet(ord = 0L, WalletApp.secret.keys.bitcoinMaster)
         }
+
+
+
+
+
+
+
+// add button menu setting 
+
         addFlowChip(settingsButtons, getString(settings_view_recovery_phrase), R.drawable.border_white)(viewRecoveryCode)
         addFlowChip(settingsButtons, getString(settings_attach_wallet), R.drawable.border_white)(attachWallet)
 
@@ -728,4 +737,26 @@ addFlowChip(settingsButtons, "Fiat: " + WalletApp.fiatCode.toUpperCase, R.drawab
       }
     }
   }
+
+
+
+
+def showFiatChooser(): Unit = {
+  val fiatMap = WalletApp.btc.fiatRates.customFiatSymbols
+  val codes = fiatMap.keys.toList.sorted
+  val labels = codes.map(c => s"${c.toUpperCase} (${fiatMap(c)})").toArray
+  new AlertDialog.Builder(me)
+    .setTitle("Chọn tiền tệ hiển thị")
+    .setItems(labels, (d, which) => {
+      val chosen = codes(which)
+      WalletApp.fiatCode = chosen
+      WalletApp.btc.fiatRates.bag.putString("fiat_code", chosen)
+      updateView
+    })
+    .setNegativeButton(android.R.string.cancel, null)
+    .show()
+}
+
+
+
 }
