@@ -668,7 +668,8 @@ class MainActivity extends BaseActivity with MnemonicActivity with ExternalDataC
     }
   }
 
-  class WalletCardsViewHolder {
+////view setting
+class WalletCardsViewHolder {
     val view = getLayoutInflater.inflate(R.layout.frag_wallet_cards, null).asInstanceOf[LinearLayout]
     val fiatUnitPriceAndChange = view.findViewById(R.id.fiatUnitPriceAndChange).asInstanceOf[TextView]
     val holder = view.findViewById(R.id.chainCardsContainer).asInstanceOf[LinearLayout]
@@ -703,6 +704,7 @@ class MainActivity extends BaseActivity with MnemonicActivity with ExternalDataC
     }
 
     def resetCards: Unit = { holder.removeAllViewsInLayout; manager.init(makeCards); updateView }
+
     def updateView: Unit = {
       val change = WalletApp.btc.fiatRates.info.pctDifference(WalletApp.fiatCode).getOrElse(new String)
       val unitRate = WalletApp.msatInFiatHuman(WalletApp.btc.fiatRates, WalletApp.fiatCode, coin, Denomination.formatFiatShort)
@@ -717,48 +719,32 @@ class MainActivity extends BaseActivity with MnemonicActivity with ExternalDataC
         if (!hasNativeBtc) addFlowChip(settingsButtons, msg.format(WalletApp.btc.ticker), R.drawable.border_white) {
           WalletApp.btc postInitWallet WalletApp.btc.createWallet(ord = 0L, WalletApp.secret.keys.bitcoinMaster)
         }
-
-
-
-
-
-
-
-// add button menu setting 
-
+        // add button menu setting
         addFlowChip(settingsButtons, getString(settings_view_recovery_phrase), R.drawable.border_white)(viewRecoveryCode)
         addFlowChip(settingsButtons, getString(settings_attach_wallet), R.drawable.border_white)(attachWallet)
-
-
-// add Buton Fiat
-
-addFlowChip(settingsButtons, "Fiat: " + WalletApp.fiatCode.toUpperCase, R.drawable.border_white) { showFiatChooser() }
-
+        // add Button Fiat
+        addFlowChip(settingsButtons, "Fiat: " + WalletApp.fiatCode.toUpperCase, R.drawable.border_white) { showFiatChooser() }
       }
     }
-  
 
-def showFiatChooser(): Unit = {
-  val fiatMap = WalletApp.btc.fiatRates.customFiatSymbols
-  val codes = fiatMap.keys.toList.sorted
-  val labels = codes.map(c => s"${c.toUpperCase} (${fiatMap(c)})").toArray
-  new AlertDialog.Builder(me)
-    .setTitle("Chọn tiền tệ hiển thị")
-    .setItems(labels, (d: android.content.DialogInterface, which: Int) => {
-      val chosen = codes(which)
-      // lưu vào SharedPreferences mà SBW dùng
-      me.getSharedPreferences("wallet", android.content.Context.MODE_PRIVATE).edit.putString("fiat_code", chosen).apply()
-      // thử cập nhật biến trong memory (nếu bản này cho phép)
-      try {
-        val f = WalletApp.getClass.getDeclaredField("fiatCode")
-        f.setAccessible(true)
-        f.set(WalletApp, chosen)
-      } catch { case _: Throwable => }
-      // refresh lại UI
-     updateView()
-    })
-    .setNegativeButton(android.R.string.cancel, null)
-    .show()
-}
-
+    def showFiatChooser(): Unit = {
+      val fiatMap = WalletApp.btc.fiatRates.customFiatSymbols
+      val codes = fiatMap.keys.toList.sorted
+      val labels = codes.map(c => s"${c.toUpperCase} (${fiatMap(c)})").toArray
+      new AlertDialog.Builder(me)
+       .setTitle("Chọn tiền tệ hiển thị")
+       .setItems(labels, (d: android.content.DialogInterface, which: Int) => {
+          val chosen = codes(which)
+          me.getSharedPreferences("wallet", android.content.Context.MODE_PRIVATE).edit.putString("fiat_code", chosen).apply()
+          try {
+            val f = WalletApp.getClass.getDeclaredField("fiatCode")
+            f.setAccessible(true)
+            f.set(WalletApp, chosen)
+          } catch { case _: Throwable => }
+          // gọi đúng updateView của class
+          WalletCardsViewHolder.this.updateView()
+        })
+       .setNegativeButton(android.R.string.cancel, null)
+       .show()
+    }
 }
