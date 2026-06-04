@@ -719,35 +719,35 @@ class WalletCardsViewHolder {
       if (!hasNativeBtc) addFlowChip(settingsButtons, msg.format(WalletApp.btc.ticker), R.drawable.border_white) {
         WalletApp.btc postInitWallet WalletApp.btc.createWallet(ord = 0L, WalletApp.secret.keys.bitcoinMaster)
       }
-      // add button menu setting
+      // add button menu setsettin
+
       addFlowChip(settingsButtons, getString(settings_view_recovery_phrase), R.drawable.border_white)(viewRecoveryCode)
       addFlowChip(settingsButtons, getString(settings_attach_wallet), R.drawable.border_white)(attachWallet)
       // Fiat button - sửa cách gọi để truyền function (=> Unit)
-      addFlowChip(settingsButtons, "Fiat: " + WalletApp.fiatCode.toUpperCase, R.drawable.border_white)(() => showFiatChooser())
+
+ // FIX CHÍNH: bỏ () => , gọi trực tiếp
+    addFlowChip(settingsButtons, "Fiat: " + WalletApp.fiatCode.toUpperCase, R.drawable.border_white) {
+      showFiatChooser()
+   
+     // addFlowChip(settingsButtons, "Fiat: " + WalletApp.fiatCode.toUpperCase, R.drawable.border_white)(() => showFiatChooser())
     }
   }
 
-  def showFiatChooser(): Unit = {
-    val rates = WalletApp.btc.fiatRates.info.rates
-  val codes = rates.keys.toList.sorted
-  val labels = codes.map(_.toUpperCase)
-    new AlertDialog.Builder(me)
-      .setTitle("Select Fiat")
-      .setItems(labels.map(_.asInstanceOf[CharSequence]).toArray, new android.content.DialogInterface.OnClickListener {
-        override def onClick(d: android.content.DialogInterface, which: Int): Unit = {
-          val chosen = codes(which)
-          me.getSharedPreferences("wallet", android.content.Context.MODE_PRIVATE)
-            .edit().putString("fiat_code", chosen).apply()
-          try {
-            val f = WalletApp.getClass.getDeclaredField("fiatCode")
-            f.setAccessible(true)
-            f.set(WalletApp, chosen)
-          } catch { case _: Throwable => }
-          updateView
-        }
-      })
-      .setNegativeButton(android.R.string.cancel, null)
-      .show()
-  }
+def showFiatChooser(): Unit = {
+  val codes = WalletApp.btc.fiatRates.info.rates.keys.toList.sorted
+  if (codes.isEmpty) { WalletApp.app.quickToast("Rates not loaded"); return }
+  val labels = codes.map(_.toUpperCase).toArray
+  new AlertDialog.Builder(me)
+    .setTitle("Chọn tiền tệ")
+    .setItems(labels, (d, which) => {
+      val chosen = codes(which)
+      me.getSharedPreferences("wallet",0).edit.putString("fiat_code", chosen).apply()
+      try { val f = WalletApp.getClass.getDeclaredField("fiatCode"); f.setAccessible(true); f.set(null, chosen) } catch { case _ => }
+      WalletApp.fiatCode = chosen  // SBW 3.3 dùng var trực tiếp
+      updateView()
+    })
+    .setNegativeButton(android.R.string.cancel, null)
+    .show()
+}
 }
 }
