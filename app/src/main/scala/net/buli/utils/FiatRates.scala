@@ -21,7 +21,7 @@ abstract class FiatRates(bag: SQLiteData, label: String) extends CanBeShutDown {
 
  
 
-// thêm vnd
+// add vnd
 
 val customFiatSymbols: Map[String, String] =
     Map("usd" -> "$", "inr" -> "₹", "gbp" -> "£", "cny" -> "CN¥",
