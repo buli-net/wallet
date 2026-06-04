@@ -730,6 +730,7 @@ class WalletCardsViewHolder {
       showFiatChooser()
   }
 }
+}
 def showFiatChooser(): Unit = {
   val codes = WalletApp.btc.fiatRates.info.rates.keys.toList.sorted
   if (codes.isEmpty) { WalletApp.app.quickToast("Rates not loaded"); return }
