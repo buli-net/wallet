@@ -19,9 +19,16 @@ abstract class FiatRates(bag: SQLiteData, label: String) extends CanBeShutDown {
     for (lst <- listeners) lst.onFiatRates(info)
   }
 
-  val customFiatSymbols: Map[String, String] =
+ 
+
+// thêm vnd
+
+val customFiatSymbols: Map[String, String] =
     Map("usd" -> "$", "inr" -> "₹", "gbp" -> "£", "cny" -> "CN¥",
-      "jpy" -> "¥", "brl" -> "R$", "eur" -> "€", "krw" -> "₩")
+      "jpy" -> "¥", "brl" -> "R$", "eur" -> "€", "krw" -> "₩", "vnd" -> "₫")
+
+
+
 
   var listeners: Set[FiatRatesListener] = Set {
     new FiatRatesListener {
