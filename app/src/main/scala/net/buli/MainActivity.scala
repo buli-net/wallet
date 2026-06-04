@@ -719,6 +719,12 @@ class MainActivity extends BaseActivity with MnemonicActivity with ExternalDataC
         }
         addFlowChip(settingsButtons, getString(settings_view_recovery_phrase), R.drawable.border_white)(viewRecoveryCode)
         addFlowChip(settingsButtons, getString(settings_attach_wallet), R.drawable.border_white)(attachWallet)
+
+
+// add Buton Fiat
+
+addFlowChip(settingsButtons, "Fiat: " + WalletApp.fiatCode.toUpperCase, R.drawable.border_white) { showFiatChooser() }
+
       }
     }
   }
