@@ -722,8 +722,10 @@ class WalletCardsViewHolder {
         // add button menu setting
         addFlowChip(settingsButtons, getString(settings_view_recovery_phrase), R.drawable.border_white)(viewRecoveryCode)
         addFlowChip(settingsButtons, getString(settings_attach_wallet), R.drawable.border_white)(attachWallet)
-        // add Button Fiat
-        addFlowChip(settingsButtons, "Fiat: " + WalletApp.fiatCode.toUpperCase, R.drawable.border_white) { showFiatChooser() }
+        //Fiat button 
+
+addFlowChip(settingsButtons, "Fiat: " + WalletApp.fiatCode.toUpperCase, R.drawable.border_white)(showFiatChooser)
+
       }
     }
 
@@ -742,7 +744,7 @@ class WalletCardsViewHolder {
             f.set(WalletApp, chosen)
           } catch { case _: Throwable => }
           // gọi đúng updateView của class
-          WalletCardsViewHolder.this.updateView()
+          WalletCardsViewHolder.this.updateView
         })
        .setNegativeButton(android.R.string.cancel, null)
        .show()
