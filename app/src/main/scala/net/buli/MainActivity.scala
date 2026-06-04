@@ -740,7 +740,7 @@ class MainActivity extends BaseActivity with MnemonicActivity with ExternalDataC
           val prefs = me.getSharedPreferences("wallet", 0)
           val editor = prefs.edit()
           editor.putString("fiat_code", chosen)
-          editor.commit()
+          editor.commit   // Không có dấu ngoặc
           walletCards.updateView()
         }
       })
