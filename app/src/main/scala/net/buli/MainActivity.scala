@@ -748,3 +748,5 @@ class WalletCardsViewHolder {
        .show()
     }
 }
+}
+}
