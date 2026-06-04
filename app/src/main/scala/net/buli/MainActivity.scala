@@ -721,6 +721,7 @@ class MainActivity extends BaseActivity with MnemonicActivity with ExternalDataC
         }
         addFlowChip(settingsButtons, getString(settings_view_recovery_phrase), R.drawable.border_white)(viewRecoveryCode)
         addFlowChip(settingsButtons, getString(settings_attach_wallet), R.drawable.border_white)(attachWallet)
+        // Thêm nút chọn Fiat
         addFlowChip(settingsButtons, "Fiat: " + WalletApp.fiatCode.toUpperCase, R.drawable.border_white) {
           me.showFiatChooser()
         }
@@ -728,9 +729,13 @@ class MainActivity extends BaseActivity with MnemonicActivity with ExternalDataC
     }
   }
 
+  // Phục hồi method chọn Fiat
   def showFiatChooser(): Unit = {
     val codes = WalletApp.btc.fiatRates.info.rates.keys.toList.sorted
-    if (codes.isEmpty) { WalletApp.app.quickToast("Rates not loaded"); return }
+    if (codes.isEmpty) {
+      WalletApp.app.quickToast("Rates not loaded")
+      return
+    }
     val labels = codes.map(_.toUpperCase).toArray
     new AlertDialog.Builder(me)
       .setTitle("Chọn tiền tệ")
@@ -738,7 +743,6 @@ class MainActivity extends BaseActivity with MnemonicActivity with ExternalDataC
         override def onClick(d: android.content.DialogInterface, which: Int): Unit = {
           val chosen = codes(which)
           me.getSharedPreferences("wallet", 0).edit().putString("fiat_code", chosen).apply()
-          WalletApp.fiatCode = chosen
           walletCards.updateView()
         }
       })
