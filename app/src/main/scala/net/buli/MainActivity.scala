@@ -743,7 +743,7 @@ class WalletCardsViewHolder {
             f.setAccessible(true)
             f.set(WalletApp, chosen)
           } catch { case _: Throwable => }
-          updateView()
+          updateView  // đã sửa: bỏ ngoặc đơn vì updateView là def updateView: Unit
         }
       })
       .setNegativeButton(android.R.string.cancel, null)
