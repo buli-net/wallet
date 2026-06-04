@@ -744,16 +744,21 @@ def showFiatChooser(): Unit = {
   val labels = codes.map(c => s"${c.toUpperCase} (${fiatMap(c)})").toArray
   new AlertDialog.Builder(me)
     .setTitle("Chọn tiền tệ hiển thị")
-    .setItems(labels, (d, which) => {
+    .setItems(labels, (d: android.content.DialogInterface, which: Int) => {
       val chosen = codes(which)
-      WalletApp.fiatCode = chosen
-      WalletApp.btc.fiatRates.bag.putString("fiat_code", chosen)
-      updateView
+      // lưu vào SharedPreferences mà SBW dùng
+      me.getSharedPreferences("wallet", android.content.Context.MODE_PRIVATE).edit.putString("fiat_code", chosen).apply()
+      // thử cập nhật biến trong memory (nếu bản này cho phép)
+      try {
+        val f = WalletApp.getClass.getDeclaredField("fiatCode")
+        f.setAccessible(true)
+        f.set(WalletApp, chosen)
+      } catch { case _: Throwable => }
+      // refresh lại UI
+      updateView()
     })
     .setNegativeButton(android.R.string.cancel, null)
     .show()
 }
-
-
 
 }
