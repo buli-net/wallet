@@ -736,7 +736,7 @@ addFlowChip(settingsButtons, "Fiat: " + WalletApp.fiatCode.toUpperCase, R.drawab
 
       }
     }
-  
+  }
 
 def showFiatChooser(): Unit = {
   val fiatMap = WalletApp.btc.fiatRates.customFiatSymbols
