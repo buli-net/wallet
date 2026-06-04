@@ -749,4 +749,3 @@ class WalletCardsViewHolder {
     }
 }
 }
-}
