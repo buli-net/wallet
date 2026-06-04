@@ -755,7 +755,7 @@ def showFiatChooser(): Unit = {
         f.set(WalletApp, chosen)
       } catch { case _: Throwable => }
       // refresh lại UI
-      updateView()
+     WalletCardsViewHolder.this.updateView()
     })
     .setNegativeButton(android.R.string.cancel, null)
     .show()
