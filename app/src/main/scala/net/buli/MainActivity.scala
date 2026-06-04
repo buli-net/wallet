@@ -736,7 +736,7 @@ addFlowChip(settingsButtons, "Fiat: " + WalletApp.fiatCode.toUpperCase, R.drawab
 
       }
     }
-  }
+  
 
 def showFiatChooser(): Unit = {
   val fiatMap = WalletApp.btc.fiatRates.customFiatSymbols
@@ -755,7 +755,7 @@ def showFiatChooser(): Unit = {
         f.set(WalletApp, chosen)
       } catch { case _: Throwable => }
       // refresh lại UI
-     WalletCardsViewHolder.this.updateView()
+     updateView()
     })
     .setNegativeButton(android.R.string.cancel, null)
     .show()
