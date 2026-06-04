@@ -730,10 +730,10 @@ class WalletCardsViewHolder {
   def showFiatChooser(): Unit = {
     val fiatMap = WalletApp.btc.fiatRates.customFiatSymbols
     val codes = fiatMap.keys.toList.sorted
-    val labels = codes.map(c => s"${c.toUpperCase} (${fiatMap(c)})").toArray
+    val labels = codes.map(c => s"${c.toUpperCase} (${fiatMap(c)})")
     new AlertDialog.Builder(me)
       .setTitle("Chọn tiền tệ hiển thị")
-      .setItems(labels, new android.content.DialogInterface.OnClickListener {
+      .setItems(labels.map(_.asInstanceOf[CharSequence]).toArray, new android.content.DialogInterface.OnClickListener {
         override def onClick(d: android.content.DialogInterface, which: Int): Unit = {
           val chosen = codes(which)
           me.getSharedPreferences("wallet", android.content.Context.MODE_PRIVATE)
@@ -743,7 +743,7 @@ class WalletCardsViewHolder {
             f.setAccessible(true)
             f.set(WalletApp, chosen)
           } catch { case _: Throwable => }
-          updateView  // đã sửa: bỏ ngoặc đơn vì updateView là def updateView: Unit
+          updateView
         }
       })
       .setNegativeButton(android.R.string.cancel, null)
