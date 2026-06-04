@@ -720,7 +720,6 @@ class MainActivity extends BaseActivity with MnemonicActivity with ExternalDataC
         }
         addFlowChip(settingsButtons, getString(settings_view_recovery_phrase), R.drawable.border_white)(viewRecoveryCode)
         addFlowChip(settingsButtons, getString(settings_attach_wallet), R.drawable.border_white)(attachWallet)
-        // SỬA LỖI: gọi đúng cú pháp curry
         addFlowChip(settingsButtons, "Fiat: " + WalletApp.fiatCode.toUpperCase, R.drawable.border_white)(() => me.showFiatChooser())
       }
     }
@@ -738,7 +737,10 @@ class MainActivity extends BaseActivity with MnemonicActivity with ExternalDataC
       .setItems(labels, new android.content.DialogInterface.OnClickListener {
         override def onClick(d: android.content.DialogInterface, which: Int): Unit = {
           val chosen = codes(which)
-          me.getSharedPreferences("wallet", 0).edit().putString("fiat_code", chosen).commit()
+          val prefs = me.getSharedPreferences("wallet", 0)
+          val editor = prefs.edit()
+          editor.putString("fiat_code", chosen)
+          editor.commit()
           walletCards.updateView()
         }
       })
