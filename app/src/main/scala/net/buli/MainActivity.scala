@@ -728,11 +728,11 @@ class WalletCardsViewHolder {
   }
 
   def showFiatChooser(): Unit = {
-    val fiatMap = WalletApp.btc.fiatRates.customFiatSymbols
-    val codes = fiatMap.keys.toList.sorted
-    val labels = codes.map(c => s"${c.toUpperCase} (${fiatMap(c)})")
+    val rates = WalletApp.btc.fiatRates.info.rates
+  val codes = rates.keys.toList.sorted
+  val labels = codes.map(_.toUpperCase)
     new AlertDialog.Builder(me)
-      .setTitle("Chọn tiền tệ hiển thị")
+      .setTitle("Select Fiat")
       .setItems(labels.map(_.asInstanceOf[CharSequence]).toArray, new android.content.DialogInterface.OnClickListener {
         override def onClick(d: android.content.DialogInterface, which: Int): Unit = {
           val chosen = codes(which)
